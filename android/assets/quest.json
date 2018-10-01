@@ -1,0 +1,95 @@
+{
+  "engineVersion": 1,
+  "gameName": "My first game",
+  "author": "Alex Khadzhinov",
+  "description": "This is my first game, guys!",
+  "contents": [
+    {
+      "id": 0,
+      "name": "Chapter 1: The beginning",
+      "completed": false
+    },
+    {
+      "id": 1,
+      "name": "Chapter 2: Rush",
+      "completed": false
+    },
+    {
+      "id": 2,
+      "name": "Chapter 3: Final battle",
+      "completed": false
+    }
+  ],
+  "gameNodes": [
+    {
+      "id": 0,
+      "type": 0,
+      "soundTheme": 1,
+      "startNode": true,
+      "endNode": false,
+      "nextNode": 1,
+      "additionalParams": {
+        "message": "[ Connecting... ]",
+        "infoMessage": true,
+        "duration": 2000
+      }
+    },
+    {
+      "id": 1,
+      "type": 0,
+      "soundTheme": 1,
+      "startNode": true,
+      "endNode": false,
+      "nextNode": 2,
+      "additionalParams": {
+        "message": "Hey! Are you there?!",
+        "infoMessage": false,
+        "duration": 1000
+      }
+    },
+    {
+      "id": 2,
+      "type": 1,
+      "soundTheme": 1,
+      "startNode": true,
+      "endNode": false,
+      "nextNode": 1,
+      "additionalParams": {
+        "choices": [
+          {
+            "text": "Choice 1",
+            "dependsOn": [],
+            "nextNode": 3
+          },
+          {
+            "text": "Choice 2",
+            "dependsOn": [],
+            "nextNode": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "type": 0,
+      "soundTheme": 1,
+      "startNode": true,
+      "endNode": false,
+      "nextNode": 0,
+      "additionalParams": {
+        "message": "Hi man!",
+        "infoMessage": false,
+        "duration": 100
+      }
+    }
+  ],
+  "inventory": [
+    //invetory objects
+  ],
+  "currentGame": {
+    "currentInventory": [
+      //array of invetory ids
+    ],
+    "currentNode": 5	//game node id
+  }
+}
