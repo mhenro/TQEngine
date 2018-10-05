@@ -75,13 +75,14 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        compile('com.android.support:support-core-utils:27.1.0')
+        compile('joda-time:joda-time:2.10')
     }
 }
 
 project(":ios") {
     apply plugin: "kotlin"
     apply plugin: "robovm"
-
 
     dependencies {
         compile project(":core")
@@ -97,12 +98,11 @@ project(":ios") {
 project(":core") {
     apply plugin: "kotlin"
 
-
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-        compile "com.fasterxml.jackson.core:jackson-databind:2.9.7"
+        compile('joda-time:joda-time:2.10')
     }
 }
 

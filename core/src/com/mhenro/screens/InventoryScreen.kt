@@ -73,6 +73,6 @@ class InventoryScreen(private val game: MyGdxGame): AbstractGameScreen() {
         list.add(Image(MyGdxGame.gameSkin, "cup")).center().padRight(15f)
         list.row().padBottom(15f)
 
-        btnItem.addListener(TextTooltip(item.description.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin))
+//        btnItem.addListener(TextTooltip(item.description.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin))
     }
 }

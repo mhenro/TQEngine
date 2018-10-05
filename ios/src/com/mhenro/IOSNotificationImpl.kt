@@ -1,5 +1,6 @@
 package com.mhenro
 
+import org.joda.time.DateTime
 import org.robovm.apple.uikit.UIApplication
 import org.robovm.apple.uikit.UIUserNotificationSettings
 import org.robovm.apple.uikit.UIUserNotificationType
@@ -7,8 +8,6 @@ import org.robovm.apple.foundation.NSTimeZone
 import org.robovm.apple.uikit.UILocalNotification
 import org.robovm.apple.foundation.NSDate
 import org.robovm.apple.foundation.NSOperationQueue
-
-
 
 class IOSNotificationImpl: NotificationHandler {
     init {
@@ -22,7 +21,7 @@ class IOSNotificationImpl: NotificationHandler {
 //        UIApplication.getSharedApplication().cancelAllLocalNotifications();
     }
 
-    override fun showNotification(title: String, text: String) {
+    override fun showNotification(title: String, text: String, dateTime: DateTime) {
         NSOperationQueue.getMainQueue().addOperation {
             val date = NSDate()
             //5 seconds from now
@@ -37,5 +36,9 @@ class IOSNotificationImpl: NotificationHandler {
 
             UIApplication.getSharedApplication().scheduleLocalNotification(localNotification)
         }
+    }
+
+    override fun stopNotifications() {
+        //TODO
     }
 }

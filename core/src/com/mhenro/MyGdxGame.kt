@@ -28,17 +28,27 @@ class MyGdxGame : Game() {
     }
 
     override fun create() {
-        questEngine = QuestEngine.getEngine()
+        questEngine = QuestEngine.getEngine(this)
         gamePrefs = Gdx.app.getPreferences("settings")
         gameSkin = Skin(Gdx.files.internal("sgxui/sgx-ui.json"))
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/main_theme.mp3"))
         soundClick = Gdx.audio.newSound(Gdx.files.internal("sounds/menu_click.mp3"))
         loadLanguage()
         initI18NBundle()
-        this.setScreen(MainMenuScreen(this))
         playMusic()
+        notificationHandler.stopNotifications()
 
-        notificationHandler.showNotification(questEngine.getQuestName(), MyGdxGame.i18NBundle.get("helpme"), DateTime.now().plusHours(6))   //run alarmmanager in any way
+        /* load previously saved data */
+        if (gamePrefs.getString("history").isNotEmpty()) {
+            val history = gamePrefs.getString("history").split(",").map { it.trim().toInt() }.toList()
+            MyGdxGame.questEngine.addToHistory(history)
+        }
+        if (gamePrefs.getString("inventory").isNotEmpty()) {
+            val inventory = gamePrefs.getString("inventory").split(",").map { it.trim().toInt() }.toList()
+            MyGdxGame.questEngine.addToInventory(inventory)
+        }
+
+        this.setScreen(MainMenuScreen(this))
     }
 
     private fun loadLanguage() {
@@ -79,12 +89,9 @@ class MyGdxGame : Game() {
     }
 
     override fun pause() {
-        val prefs = Gdx.app.getPreferences("settings")
-        val lastTime = prefs.getString("lastTime", "fuuuu")
-        Gdx.app.log(tag, lastTime)
-        Gdx.app.log(tag, "on pause")
-        prefs.putString("lastTime", "10:10:10")
-        prefs.flush()
+        MyGdxGame.gamePrefs.putString("history", MyGdxGame.questEngine.getHistory().joinToString())
+        MyGdxGame.gamePrefs.putString("inventory", MyGdxGame.questEngine.getPlayerInventoryItemIds().joinToString())
+        MyGdxGame.gamePrefs.flush()
     }
 
     override fun resume() {
@@ -92,5 +99,6 @@ class MyGdxGame : Game() {
     }
 
     override fun dispose() {
+
     }
 }

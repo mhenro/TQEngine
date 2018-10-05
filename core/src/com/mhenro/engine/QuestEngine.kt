@@ -1,23 +1,67 @@
 package com.mhenro.engine
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
+import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Json
+import com.badlogic.gdx.utils.Timer
+import com.mhenro.MyGdxGame
 import com.mhenro.engine.model.*
+import com.mhenro.screens.GameOverScreen
+import org.joda.time.DateTime
 
 class QuestEngine private constructor(private val questData: QuestGame,
+                                      private val game: MyGdxGame,
                                       private val history: MutableList<Int> = ArrayList(),
                                       private var currentNode: QuestGameNode? = null,
                                       private var currentInventory: MutableSet<Int> = HashSet(),
-                                      private var selectedLanguage: String = "en") {
+                                      private var selectedLanguage: String = "en",
+                                      private val gameTimer: Timer = Timer(),
+                                      private var completedTime: DateTime = DateTime.now(),
+                                      private var contentList: ScrollPane = ScrollPane(null)) {
     companion object {
         const val ENGINE_VERSION = 1
+        const val GAME_TIMER_DELAY = 3f
+        const val GAME_TIMER_REPEAT_INTERVAL = 1f
 
-        fun getEngine(): QuestEngine {
+        fun getEngine(game: MyGdxGame): QuestEngine {
             val data = Json().fromJson(QuestGame::class.java, Gdx.files.internal("quest.json"))
-            val engine = QuestEngine(data)
+            val engine = QuestEngine(data, game)
             engine.validateQuest()
             return engine
         }
+    }
+
+    init {
+        gameTimer.scheduleTask(object : Timer.Task() {
+            override fun run() {
+                if (completedTime > DateTime.now()) {
+                    return
+                }
+                val cellCount = (contentList.actor as Table).cells.count()
+                if (isHistoryAvailable() && cellCount == 0) {
+                    setCurrentNode(getHistory().last())
+                    for (i in 0 until getHistory().size - 1) {
+                        val nodeId = getHistory()[i]
+                        val gameNode = getNodeById(nodeId)
+                        addNextMessage(gameNode, true)
+                    }
+                    val tmpHistory = history.dropLast(1)
+                    history.clear()
+                    history.addAll(tmpHistory)
+                }
+                if (getHistory().isEmpty() || getCurrentNode().id != getHistory().last()) {
+                    val node = getCurrentNode()
+                    addNextMessage(node)
+                }
+            }
+        }, GAME_TIMER_DELAY, GAME_TIMER_REPEAT_INTERVAL)
+        stopQuest()
     }
 
     private fun validateQuest() {
@@ -49,6 +93,13 @@ class QuestEngine private constructor(private val questData: QuestGame,
                     if (it.nextNode == null) {
                         throw QuestParserException("Node with type 0 (simple message) must has a nextNode property")
                     }
+                    params.notification?.let {notification ->
+                        questData.supportedLanguages.forEach {
+                            if (notification.locale[it] == null || notification.locale[it]!!.isBlank()) {
+                                throw QuestParserException("If notification property is presented it should have not empty text for all supported languages")
+                            }
+                        }
+                    }
                 }
                 1 -> {
                     if (params.choices == null || params.choices?.isEmpty()!!) {
@@ -72,6 +123,114 @@ class QuestEngine private constructor(private val questData: QuestGame,
             throw QuestParserException("Each inventory must has a name property")
         }
         //TODO: validate inventory ids from CurrentGame object
+    }
+
+    private fun createMessage(node: QuestGameNode) {
+        val msg = node.additionalParams.message!!.locale[getLanguage()]
+        val info = node.additionalParams.infoMessage!!
+        val duration = node.additionalParams.duration!!
+        val notification = node.additionalParams.notification
+
+        val button = TextButton(msg,
+                MyGdxGame.gameSkin, if (info) "info-message" else "simple-message")
+        button.label.setWrap(true)
+        button.label.setAlignment(Align.left, Align.left)
+        button.labelCell.padLeft(10f).padRight(10f)
+        (contentList.actor as Table).add(button).fill().expandX().padLeft(15f).padRight(15f)
+        (contentList.actor as Table).row().padBottom(5f)
+
+        notification?.let {
+            val text = it.locale[getLanguage()]!!
+            game.notificationHandler.showNotification(getQuestName(), text, DateTime.now().plusMillis(duration))
+        }
+    }
+
+    private fun createImage(imgLocation: String) {
+        val image = Image(MyGdxGame.gameSkin, imgLocation)
+        (contentList.actor as Table).add(image).center().padLeft(15f).padRight(15f).padTop(30f).padBottom(30f)
+        (contentList.actor as Table).row().padBottom(5f)
+    }
+
+    private fun createAnswer(node: QuestGameNode, history: Boolean = false) {
+        val choicePanel = Table()
+        node.additionalParams.choices!!.forEach {
+            val btnChoice = TextButton(it.text.locale[getLanguage()], MyGdxGame.gameSkin, "choice")
+            btnChoice.label.setWrap(true)
+            btnChoice.labelCell.padTop(5f).padBottom(5f)
+            choicePanel.add(btnChoice).fill().expandX()
+
+            if (!MyGdxGame.questEngine.getPlayerInventoryItemIds().containsAll(it.dependsOn)) {
+                btnChoice.isDisabled = true
+            }
+
+            if (!history) {
+                btnChoice.addListener(object : InputListener() {
+                    override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
+                        if (getCurrentNode().id != node.id) {
+                            return
+                        }
+                        game.playClick()
+                        btnChoice.isDisabled = true
+
+                        setCurrentNode(it.nextNode!!)
+                        completedTime = DateTime.now().plusMillis(100)
+                    }
+
+                    override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                        return !btnChoice.isDisabled
+                    }
+                })
+            }
+        }
+        (contentList.actor as Table).add(choicePanel).fill().expandX().padLeft(15f).padRight(15f).padBottom(5f)
+        (contentList.actor as Table).row()
+
+//        (contentList.actor as Table).row().expand()
+//        (contentList.actor as Table).add()
+//        (contentList.actor as Table).row()
+    }
+
+    private fun addNextMessage(node: QuestGameNode, history: Boolean = false) {
+        if (!history && node.id != getPrevNode()) {
+            addToHistory(node.id)
+            addToInventory(node.newInventory)
+        }
+        if (node.endNode) {
+            stopQuest()
+            game.screen = GameOverScreen(game, node)
+            restartGame()
+            return
+        }
+        when (node.type) {
+            0 -> {
+                val duration = node.additionalParams.duration!!
+                createMessage(node)
+
+                if (!history) {
+                    setCurrentNode(node.nextNode!!)
+                    completedTime = DateTime.now().plusMillis(duration)
+                }
+            }
+            1 -> {
+                createAnswer(node, history)
+            }
+            2 -> {
+                val location = node.additionalParams.location!!
+                val duration = node.additionalParams.duration!!
+
+                createImage(location)
+                if (!history) {
+                    setCurrentNode(node.nextNode!!)
+                    completedTime = DateTime.now().plusMillis(duration)
+                }
+            }
+        }
+
+//        (contentList.actor as Table).row().expand()
+//        (contentList.actor as Table).add()
+//        (contentList.actor as Table).row()
+        contentList.layout()
+        contentList.scrollTo(0f, 0f, 0f, 0f)
     }
 
     fun getLanguage(): String {
@@ -142,6 +301,10 @@ class QuestEngine private constructor(private val questData: QuestGame,
         history.add(nodeId)
     }
 
+    fun addToHistory(nodeIds: List<Int>) {
+        history.addAll(nodeIds)
+    }
+
     fun getPrevNode(): Int? {
         if (history.isNotEmpty()) {
             return history.last()
@@ -157,5 +320,16 @@ class QuestEngine private constructor(private val questData: QuestGame,
         clearHistory()
         clearInventory()
         setCurrentNode(getStartNode().id)
+    }
+
+    fun startQuest(scrollPane: ScrollPane) {
+        contentList = scrollPane
+        (contentList.actor as Table).clearChildren()
+        gameTimer.start()
+        completedTime = DateTime.now().plusSeconds(1)
+    }
+
+    fun stopQuest() {
+        gameTimer.stop()
     }
 }

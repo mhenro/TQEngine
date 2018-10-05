@@ -4,11 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.ui.*
-import com.badlogic.gdx.utils.Align
-import com.badlogic.gdx.utils.Timer
 import com.mhenro.MyGdxGame
-import com.mhenro.engine.model.QuestGameNode
-import org.joda.time.DateTime
 
 class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
     private val tag = GameScreen::class.java.simpleName
@@ -16,14 +12,7 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
 
     init {
         createLayout()
-        if (MyGdxGame.questEngine.isHistoryAvailable()) {
-            for (i in 0 until MyGdxGame.questEngine.getHistory().size - 1) {
-                val nodeId = MyGdxGame.questEngine.getHistory()[i]
-                val gameNode = MyGdxGame.questEngine.getNodeById(nodeId)
-                addNextMessage(gameNode, true)
-            }
-        }
-        addNextMessage(MyGdxGame.questEngine.getCurrentNode())
+        MyGdxGame.questEngine.startQuest(contentList)
     }
 
     private fun createLayout() {
@@ -44,6 +33,7 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
         btnContents.addListener(object : InputListener() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
+                MyGdxGame.questEngine.stopQuest()
                 game.screen = ContentsScreen(game)
             }
 
@@ -51,7 +41,7 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
                 return true
             }
         })
-        btnContents.addListener(TextTooltip("Contents", MyGdxGame.gameSkin))
+//        btnContents.addListener(TextTooltip("Contents", MyGdxGame.gameSkin))
         return btnContents
     }
 
@@ -62,6 +52,7 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
         btnInventory.addListener(object : InputListener() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
+                MyGdxGame.questEngine.stopQuest()
                 game.screen = InventoryScreen(game)
             }
 
@@ -69,7 +60,7 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
                 return true
             }
         })
-        btnInventory.addListener(TextTooltip("Inventory", MyGdxGame.gameSkin))
+//        btnInventory.addListener(TextTooltip("Inventory", MyGdxGame.gameSkin))
         return btnInventory
     }
 
@@ -80,6 +71,7 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
         btnSettings.addListener(object : InputListener() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
+                MyGdxGame.questEngine.stopQuest()
                 game.screen = OptionsScreen(game, GameScreen::class.java)
             }
 
@@ -87,7 +79,7 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
                 return true
             }
         })
-        btnSettings.addListener(TextTooltip("Settings", MyGdxGame.gameSkin))
+//        btnSettings.addListener(TextTooltip("Settings", MyGdxGame.gameSkin))
         return btnSettings
     }
 
@@ -98,6 +90,7 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
         btnMainMenu.addListener(object : InputListener() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
+                MyGdxGame.questEngine.stopQuest()
                 game.screen = MainMenuScreen(game)
             }
 
@@ -105,7 +98,7 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
                 return true
             }
         })
-        btnMainMenu.addListener(TextTooltip("Main menu", MyGdxGame.gameSkin))
+//        btnMainMenu.addListener(TextTooltip("Main menu", MyGdxGame.gameSkin))
         return btnMainMenu
     }
 
@@ -114,114 +107,5 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
         contentList = ScrollPane(table)
         contentList.setScrollingDisabled(true, false)
         return contentList
-    }
-
-    private fun createMessage(msg: String, info: Boolean, duration: Int) {
-        val button = TextButton(msg,
-                MyGdxGame.gameSkin, if (info) "info-message" else "simple-message")
-        button.label.setWrap(true)
-        button.label.setAlignment(Align.left, Align.left)
-        button.labelCell.padLeft(10f).padRight(10f)
-        (contentList.actor as Table).add(button).fill().expandX().padLeft(15f).padRight(15f)
-        (contentList.actor as Table).row().padBottom(5f)
-
-        if (info) {
-            game.notificationHandler.showNotification(MyGdxGame.questEngine.getQuestName(), MyGdxGame.i18NBundle.get("helpme"), DateTime.now().plusMillis(duration))
-        }
-    }
-
-    private fun createImage(imgLocation: String) {
-        val image = Image(MyGdxGame.gameSkin, imgLocation)
-        (contentList.actor as Table).add(image).center().padLeft(15f).padRight(15f).padTop(30f).padBottom(30f)
-        (contentList.actor as Table).row().padBottom(5f)
-    }
-
-    private fun createAnswer(node: QuestGameNode, history: Boolean = false) {
-        val choicePanel = Table()
-        node.additionalParams.choices!!.forEach {
-            val btnChoice = TextButton(it.text.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin, "choice")
-            btnChoice.label.setWrap(true)
-            btnChoice.labelCell.padTop(5f).padBottom(5f)
-            choicePanel.add(btnChoice).fill().expandX()
-
-            if (!history) {
-                btnChoice.addListener(object : InputListener() {
-                    override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
-                        if (MyGdxGame.questEngine.getCurrentNode().id != node.id) {
-                            return
-                        }
-                        game.playClick()
-                        btnChoice.isDisabled = true
-
-                        Timer.schedule(object : Timer.Task() {
-                            override fun run() {
-                                addNextMessage(MyGdxGame.questEngine.getNodeById(it.nextNode))
-                            }
-                        }, 10f / 1000)
-                    }
-
-                    override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
-                        return !btnChoice.isDisabled
-                    }
-                })
-            }
-        }
-        (contentList.actor as Table).add(choicePanel).fill().expandX().padLeft(15f).padRight(15f).padBottom(5f)
-        (contentList.actor as Table).row()
-
-//        (contentList.actor as Table).row().expand()
-//        (contentList.actor as Table).add()
-//        (contentList.actor as Table).row()
-    }
-
-    private fun addNextMessage(node: QuestGameNode, history: Boolean = false) {
-        if (!history && node.id != MyGdxGame.questEngine.getPrevNode()) {
-            MyGdxGame.questEngine.setCurrentNode(node.id)
-            MyGdxGame.questEngine.addToHistory(node.id)
-            MyGdxGame.questEngine.addToInventory(node.newInventory)
-        }
-        if (node.endNode) {
-            game.screen = GameOverScreen(game, node)
-            return
-        }
-        when (node.type) {
-            0 -> {
-                val message = node.additionalParams.message!!.locale[MyGdxGame.questEngine.getLanguage()]
-                val duration = node.additionalParams.duration!!
-                val info = node.additionalParams.infoMessage!!
-
-                createMessage("\n$message\n", info, duration)
-
-                if (!history) {
-                    Timer.schedule(object : Timer.Task() {
-                        override fun run() {
-                            addNextMessage(MyGdxGame.questEngine.getNodeById(node.nextNode!!))
-                        }
-                    }, duration.toFloat() / 1000)
-                }
-            }
-            1 -> {
-                createAnswer(node, history)
-            }
-            2 -> {
-                val location = node.additionalParams.location!!
-                val duration = node.additionalParams.duration!!
-
-                createImage(location)
-                if (!history) {
-                    Timer.schedule(object : Timer.Task() {
-                        override fun run() {
-                            addNextMessage(MyGdxGame.questEngine.getNodeById(node.nextNode!!))
-                        }
-                    }, duration.toFloat() / 1000)
-                }
-            }
-        }
-
-//        (contentList.actor as Table).row().expand()
-//        (contentList.actor as Table).add()
-//        (contentList.actor as Table).row()
-        contentList.layout()
-        contentList.scrollTo(0f, 0f, 0f, 0f)
     }
 }

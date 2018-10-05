@@ -157,7 +157,7 @@
                 "ru": "Ты кто?"
               }
             },
-            "dependsOn": [],
+            "dependsOn": [20],
             "nextNode": 6
           }
         ]
@@ -194,6 +194,12 @@
           }
         },
         "infoMessage": true,
+        "notification": {
+          "locale": {
+            "en": "I've sent you a photo. Please see it!",
+            "ru": "Я отослал тебе фотку. Посмотри ее плиз!"
+          }
+        },
         "duration": 30000
       }
     },
