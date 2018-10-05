@@ -9,3 +9,7 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 eclipse.project {
     name = appName + "-core"
 }
+
+dependencies {
+    compile('joda-time:joda-time:2.10')
+}

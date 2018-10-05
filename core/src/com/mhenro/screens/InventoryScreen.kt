@@ -8,9 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
 import com.mhenro.engine.model.QuestChapter
+import com.mhenro.engine.model.QuestInventoryItem
 
-class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
-    private val tag = ContentsScreen::class.java.simpleName
+class InventoryScreen(private val game: MyGdxGame): AbstractGameScreen() {
+    private val tag = InventoryScreen::class.java.simpleName
 
     init {
         createLayout()
@@ -26,7 +27,7 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
     }
 
     private fun createTitle(): Actor {
-        val title = Label("\nCONTENTS\n", MyGdxGame.gameSkin, "title")
+        val title = Label("\nINVENTORY\n", MyGdxGame.gameSkin, "title")
         title.setAlignment(Align.center)
         return title
     }
@@ -50,11 +51,9 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
 
     private fun createContentList(): Actor {
         val list = Table()
-        for (i in 0 until MyGdxGame.questEngine.getContents().size) {
-            val chapter = MyGdxGame.questEngine.getContents()[i]
-            if (i == 0 || chapter.completed) {
-                createListElement(list, chapter, i == 0)
-            }
+        MyGdxGame.questEngine.getPlayerInventoryItemIds().forEach {
+            val item = MyGdxGame.questEngine.getInventoryById(it)
+            createListElement(list, item)
         }
 
         list.row().expand().padBottom(15f)
@@ -66,28 +65,14 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
         return scrollPane
     }
 
-    private fun createListElement(list: Table, chapter: QuestChapter, restart: Boolean = false) {
+    private fun createListElement(list: Table, item: QuestInventoryItem) {
         list.row().padBottom(15f)
-        val btnBookmark = TextButton(if (restart) MyGdxGame.i18NBundle.get("restart") else chapter.name.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin, "no-border")
-        list.add(btnBookmark).left().padLeft(15f)
+        val btnItem = TextButton(item.name.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin, "no-border")
+        list.add(btnItem).left().padLeft(15f)
         list.add().expandX()
-        list.add(Image(MyGdxGame.gameSkin, if (restart) "restart" else "bookmark")).center().padRight(15f)
+        list.add(Image(MyGdxGame.gameSkin, "cup")).center().padRight(15f)
         list.row().padBottom(15f)
 
-        btnBookmark.addListener(object : InputListener() {
-            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
-                game.playClick()
-                Gdx.app.log(tag, "Goto node #${chapter.id}")
-
-                if (restart) {
-                    MyGdxGame.questEngine.restartGame()
-                    game.screen = GameScreen(game)
-                }
-            }
-
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
-                return true
-            }
-        })
+        btnItem.addListener(TextTooltip(item.description.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin))
     }
 }

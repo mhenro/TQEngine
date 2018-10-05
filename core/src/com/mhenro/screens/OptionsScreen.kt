@@ -1,14 +1,16 @@
 package com.mhenro.screens
 
+import com.badlogic.gdx.Screen
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
 
-class OptionsScreen(private val game: MyGdxGame): AbstractGameScreen() {
-    private val tag = GameScreen::class.java.simpleName
+class OptionsScreen(private val game: MyGdxGame, private val backScreen: Class<out Screen>?): AbstractGameScreen() {
+    private val tag = OptionsScreen::class.java.simpleName
 
     init {
         createLayout()
@@ -17,24 +19,26 @@ class OptionsScreen(private val game: MyGdxGame): AbstractGameScreen() {
     private fun createLayout() {
         wrapper.row().padLeft(5f).padRight(5f)
         wrapper.add(createTitle()).expandX().fill()
-        wrapper.add(createCloseButton()).align(Align.left).padRight(15f)
+        wrapper.add(createCloseButton()).align(Align.left).padRight(25f)
         wrapper.row().fill().expand().padLeft(5f).padRight(5f)
         wrapper.add(createContentList())
         wrapper.layout()
     }
 
     private fun createTitle(): Actor {
-        val title = Label("\nOPTIONS\n", MyGdxGame.gameSkin)
+        val title = Label("\n${MyGdxGame.i18NBundle.get("options")}\n", MyGdxGame.gameSkin, "title")
         title.setAlignment(Align.center)
         return title
     }
 
     private fun createCloseButton(): Actor {
         val btnClose = Button(MyGdxGame.gameSkin, "close")
+        btnClose.isTransform = true
+        btnClose.scaleBy(0.5f)
         btnClose.addListener(object : InputListener() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
-                game.screen = GameScreen(game)
+                game.screen = backScreen?.getDeclaredConstructor(MyGdxGame::class.java)?.newInstance(game) ?: MainMenuScreen(game)
             }
 
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
@@ -48,6 +52,7 @@ class OptionsScreen(private val game: MyGdxGame): AbstractGameScreen() {
         val list = Table()
         createSoundCheckbox(list)
         createMusicCheckbox(list)
+        createLanguageSelectBox(list)
 
         list.row().expand().padBottom(15f)
         list.add()
@@ -60,7 +65,7 @@ class OptionsScreen(private val game: MyGdxGame): AbstractGameScreen() {
 
     private fun createSoundCheckbox(list: Table) {
         list.row().padBottom(15f)
-        val chkSound = CheckBox("Sounds", MyGdxGame.gameSkin)
+        val chkSound = CheckBox(MyGdxGame.i18NBundle.get("sounds"), MyGdxGame.gameSkin)
         chkSound.isChecked = MyGdxGame.gamePrefs.getBoolean("soundEnabled", true)
         list.add(chkSound).left().left().padLeft(15f)
 
@@ -79,7 +84,7 @@ class OptionsScreen(private val game: MyGdxGame): AbstractGameScreen() {
 
     private fun createMusicCheckbox(list: Table) {
         list.row().padBottom(15f)
-        val chkMusic = CheckBox("Music", MyGdxGame.gameSkin)
+        val chkMusic = CheckBox(MyGdxGame.i18NBundle.get("music"), MyGdxGame.gameSkin)
         chkMusic.isChecked = MyGdxGame.gamePrefs.getBoolean("musicEnabled", true)
         list.add(chkMusic).left().left().padLeft(15f)
         chkMusic.addListener(object : InputListener() {
@@ -91,6 +96,31 @@ class OptionsScreen(private val game: MyGdxGame): AbstractGameScreen() {
 
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
+            }
+        })
+    }
+
+    private fun createLanguageSelectBox(list: Table) {
+        list.row().padBottom(15f)
+        val label = Label(MyGdxGame.i18NBundle.get("language"), MyGdxGame.gameSkin, "small")
+        val languageBox = SelectBox<String>(MyGdxGame.gameSkin)
+        val wrapper = Table()
+        MyGdxGame.questEngine.getSupportedLanguages().forEach { languageBox.items.add(it) }
+        MyGdxGame.questEngine.getSupportedLanguages().forEach { languageBox.list.items.add(it) }
+//        languageBox.selectedIndex = 0
+        languageBox.selected = MyGdxGame.questEngine.getLanguage()
+        wrapper.row().padLeft(3f)
+        wrapper.add(label)
+        wrapper.add(languageBox).padLeft(10f)
+        list.add(wrapper).left().left().padLeft(15f)
+        languageBox.addListener(object : ChangeListener() {
+            override fun changed(event: ChangeEvent?, actor: Actor?) {
+                val language = (actor as SelectBox<String>).selection.lastSelected
+                MyGdxGame.gamePrefs.putString("selectedLanguage", language)
+                MyGdxGame.questEngine.setLanguage(language)
+                MyGdxGame.gamePrefs.flush()
+                game.initI18NBundle()
+                game.screen = OptionsScreen(game, null)
             }
         })
     }

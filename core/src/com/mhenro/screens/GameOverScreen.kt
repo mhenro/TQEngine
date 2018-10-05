@@ -8,9 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
 import com.mhenro.engine.model.QuestChapter
+import com.mhenro.engine.model.QuestGameNode
 
-class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
-    private val tag = ContentsScreen::class.java.simpleName
+class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGameNode): AbstractGameScreen() {
+    private val tag = GameOverScreen::class.java.simpleName
 
     init {
         createLayout()
@@ -21,12 +22,12 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
         wrapper.add(createTitle()).expandX().fill()
         wrapper.add(createCloseButton()).align(Align.left).padRight(25f)
         wrapper.row().fill().expand().padLeft(5f).padRight(5f)
-        wrapper.add(createContentList())
+        wrapper.add(createContentList()).colspan(2)
         wrapper.layout()
     }
 
     private fun createTitle(): Actor {
-        val title = Label("\nCONTENTS\n", MyGdxGame.gameSkin, "title")
+        val title = Label("\nGAME OVER\n", MyGdxGame.gameSkin, "title")
         title.setAlignment(Align.center)
         return title
     }
@@ -38,7 +39,8 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
         btnClose.addListener(object : InputListener() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
-                game.screen = GameScreen(game)
+                MyGdxGame.questEngine.restartGame()
+                game.screen = MainMenuScreen(game)
             }
 
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
@@ -50,15 +52,12 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
 
     private fun createContentList(): Actor {
         val list = Table()
-        for (i in 0 until MyGdxGame.questEngine.getContents().size) {
-            val chapter = MyGdxGame.questEngine.getContents()[i]
-            if (i == 0 || chapter.completed) {
-                createListElement(list, chapter, i == 0)
-            }
-        }
-
-        list.row().expand().padBottom(15f)
-        list.add()
+        val text = Label(endNode.additionalParams.message!!.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin)
+        text.setWrap(true)
+        text.setAlignment(Align.center)
+        list.add(text).center().fill().expand().padLeft(15f).padRight(15f)
+        list.row()
+        list.add(createBackButton()).fill().expandX().padLeft(15f).padRight(15f).padTop(30f).padBottom(30f)
 
         val scrollPane = ScrollPane(list)
         scrollPane.layout()
@@ -66,28 +65,21 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
         return scrollPane
     }
 
-    private fun createListElement(list: Table, chapter: QuestChapter, restart: Boolean = false) {
-        list.row().padBottom(15f)
-        val btnBookmark = TextButton(if (restart) MyGdxGame.i18NBundle.get("restart") else chapter.name.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin, "no-border")
-        list.add(btnBookmark).left().padLeft(15f)
-        list.add().expandX()
-        list.add(Image(MyGdxGame.gameSkin, if (restart) "restart" else "bookmark")).center().padRight(15f)
-        list.row().padBottom(15f)
-
-        btnBookmark.addListener(object : InputListener() {
+    private fun createBackButton(): Actor {
+        val btnStartGame = ImageTextButton("BACK TO MENU", MyGdxGame.gameSkin)
+        btnStartGame.addListener(object : InputListener() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
-                Gdx.app.log(tag, "Goto node #${chapter.id}")
-
-                if (restart) {
-                    MyGdxGame.questEngine.restartGame()
-                    game.screen = GameScreen(game)
-                }
+                MyGdxGame.questEngine.restartGame()
+                game.screen = MainMenuScreen(game)
             }
 
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })
+        return btnStartGame
     }
+
+
 }

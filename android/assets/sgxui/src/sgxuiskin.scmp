@@ -258,23 +258,6 @@ atlasData: {
 			customized: false
 		}
 		{
-			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/sgxui/src/sgxuiskin_data/cup.png
-			bgColor: {
-				r: 1
-				g: 1
-				b: 1
-				a: 1
-			}
-			visible: true
-			tint: null
-			tintName: null
-			name: cup
-			tiled: false
-			minWidth: 0
-			minHeight: 0
-			customized: false
-		}
-		{
 			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/sgxui/src/sgxuiskin_data/font32.png
 			bgColor: {
 				r: 0
@@ -2416,6 +2399,125 @@ atlasData: {
 			minHeight: 0
 			customized: false
 		}
+		{
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/inventory.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: inventory
+			tiled: false
+			minWidth: 0
+			minHeight: 0
+			customized: false
+		}
+		{
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/cup.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: cup
+			tiled: false
+			minWidth: 0
+			minHeight: 0
+			customized: false
+		}
+		{
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/forest.jpg
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: forest
+			tiled: false
+			minWidth: 0
+			minHeight: 0
+			customized: false
+		}
+		{
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/small16.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: false
+			tint: null
+			tintName: null
+			name: small16
+			tiled: false
+			minWidth: 0
+			minHeight: 0
+			customized: false
+		}
+		{
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/Title32.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: false
+			tint: null
+			tintName: null
+			name: Title32
+			tiled: false
+			minWidth: 0
+			minHeight: 0
+			customized: false
+		}
+		{
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/Title32-2.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: false
+			tint: null
+			tintName: null
+			name: Title32-2
+			tiled: false
+			minWidth: 0
+			minHeight: 0
+			customized: false
+		}
+		{
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/general-font20.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: false
+			tint: null
+			tintName: null
+			name: general-font20
+			tiled: false
+			minWidth: 0
+			minHeight: 0
+			customized: false
+		}
 	]
 }
 jsonData: {
@@ -2549,6 +2651,11 @@ jsonData: {
 		}
 		{
 			class: com.ray3k.skincomposer.data.FontData
+			name: general-font20
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/general-font20.fnt
+		}
+		{
+			class: com.ray3k.skincomposer.data.FontData
 			name: medium
 			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/sgxui/src/sgxuiskin_data/font-medium-export.fnt
 		}
@@ -2559,8 +2666,23 @@ jsonData: {
 		}
 		{
 			class: com.ray3k.skincomposer.data.FontData
+			name: small16
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/small16.fnt
+		}
+		{
+			class: com.ray3k.skincomposer.data.FontData
 			name: title
 			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/sgxui/src/sgxuiskin_data/font-title-export.fnt
+		}
+		{
+			class: com.ray3k.skincomposer.data.FontData
+			name: title32
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/Title32.fnt
+		}
+		{
+			class: com.ray3k.skincomposer.data.FontData
+			name: title32-2
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/code/android/assets/custom_skin/Title32-2.fnt
 		}
 	]
 	freeTypeFonts: []
@@ -3165,7 +3287,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: small
+						value: small16
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -4014,7 +4136,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: font32
+						value: title32
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -5438,7 +5560,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: font
+						value: general-font20
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -5496,7 +5618,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: small
+						value: small16
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -5554,7 +5676,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: title
+						value: title32
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -5672,7 +5794,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: small
+						value: small16
 					}
 					fontColorSelected: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -6006,7 +6128,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: small
+						value: small16
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -7679,7 +7801,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: fon20
+						value: general-font20
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -7820,7 +7942,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: fon20
+						value: general-font20
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -7961,7 +8083,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: fon20
+						value: general-font20
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -8092,6 +8214,147 @@ jsonData: {
 				}
 				deletable: true
 			}
+			{
+				class: com.ray3k.skincomposer.data.StyleData
+				name: choice-selected
+				clazz: com.badlogic.gdx.scenes.scene2d.ui.TextButton
+				properties: {
+					font: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.g2d.BitmapFont
+						name: font
+						optional: false
+						value: general-font20
+					}
+					fontColor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.Color
+						name: fontColor
+						optional: true
+						value: green-font
+					}
+					downFontColor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.Color
+						name: downFontColor
+						optional: true
+						value: null
+					}
+					overFontColor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.Color
+						name: overFontColor
+						optional: true
+						value: font-over
+					}
+					checkedFontColor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.Color
+						name: checkedFontColor
+						optional: true
+						value: null
+					}
+					checkedOverFontColor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.Color
+						name: checkedOverFontColor
+						optional: true
+						value: null
+					}
+					disabledFontColor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.Color
+						name: disabledFontColor
+						optional: true
+						value: green-font
+					}
+					up: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: up
+						optional: true
+						value: button-emphasis-color
+					}
+					down: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: down
+						optional: true
+						value: button-emphasis-color-pressed
+					}
+					over: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: over
+						optional: true
+						value: button-emphasis-color-over
+					}
+					checked: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: checked
+						optional: true
+						value: null
+					}
+					checkedOver: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: checkedOver
+						optional: true
+						value: null
+					}
+					disabled: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: disabled
+						optional: true
+						value: button-emphasis-color-disabled
+					}
+					pressedOffsetX: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: float
+						name: pressedOffsetX
+						optional: true
+						value: 0
+					}
+					pressedOffsetY: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: float
+						name: pressedOffsetY
+						optional: true
+						value: 0
+					}
+					unpressedOffsetX: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: float
+						name: unpressedOffsetX
+						optional: true
+						value: 0
+					}
+					unpressedOffsetY: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: float
+						name: unpressedOffsetY
+						optional: true
+						value: 0
+					}
+					checkedOffsetX: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: float
+						name: checkedOffsetX
+						optional: true
+						value: 0
+					}
+					checkedOffsetY: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: float
+						name: checkedOffsetY
+						optional: true
+						value: 0
+					}
+				}
+				deletable: true
+			}
 		]
 		com.badlogic.gdx.scenes.scene2d.ui.TextField: [
 			{
@@ -8104,7 +8367,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: small
+						value: small16
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty

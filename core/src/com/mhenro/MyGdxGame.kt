@@ -6,44 +6,50 @@ import com.badlogic.gdx.Preferences
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
-import com.badlogic.gdx.utils.Json
+import com.badlogic.gdx.utils.I18NBundle
 import com.mhenro.engine.QuestEngine
-import com.mhenro.engine.model.QuestGame
-import com.mhenro.screens.GameScreen
 import com.mhenro.screens.MainMenuScreen
-import com.mhenro.screens.OptionsScreen
+import org.joda.time.DateTime
+import java.time.LocalDateTime
+import java.util.*
 
 
 class MyGdxGame : Game() {
     private val tag = MyGdxGame::class.java.simpleName
+    lateinit var notificationHandler: NotificationHandler
 
     companion object {
-        lateinit var gameQuest: QuestGame
         lateinit var questEngine: QuestEngine
         lateinit var gameSkin: Skin
         lateinit var soundClick: Sound
         lateinit var music: Music
         lateinit var gamePrefs: Preferences
+        lateinit var i18NBundle: I18NBundle
     }
 
     override fun create() {
-        gameQuest = loadQuest()
-        questEngine = QuestEngine(gameQuest)
-        questEngine.validateQuest()
-
+        questEngine = QuestEngine.getEngine()
         gamePrefs = Gdx.app.getPreferences("settings")
-
         gameSkin = Skin(Gdx.files.internal("sgxui/sgx-ui.json"))
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/main_theme.mp3"))
         soundClick = Gdx.audio.newSound(Gdx.files.internal("sounds/menu_click.mp3"))
+        loadLanguage()
+        initI18NBundle()
         this.setScreen(MainMenuScreen(this))
-
         playMusic()
+
+        notificationHandler.showNotification(questEngine.getQuestName(), MyGdxGame.i18NBundle.get("helpme"), DateTime.now().plusHours(6))   //run alarmmanager in any way
     }
 
-    private fun loadQuest(): QuestGame {
-        val json = Json()
-        return json.fromJson(QuestGame::class.java, Gdx.files.internal("quest.json"))
+    private fun loadLanguage() {
+        val language = gamePrefs.getString("selectedLanguage", "en")
+        MyGdxGame.questEngine.setLanguage(language)
+    }
+
+    fun initI18NBundle() {
+        val file = Gdx.files.internal("i18n/SystemMessages")
+        val locale = Locale(questEngine.getLanguage())
+        i18NBundle = I18NBundle.createBundle(file, locale, "UTF-8")
     }
 
     fun playMusic() {

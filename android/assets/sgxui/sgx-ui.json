@@ -15,14 +15,26 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	font32: {
 		file: font32.fnt
 	}
+	general-font20: {
+		file: general-font20.fnt
+	}
 	medium: {
 		file: font-medium-export.fnt
 	}
 	small: {
 		file: font-small-export.fnt
 	}
+	small16: {
+		file: small16.fnt
+	}
 	title: {
 		file: font-title-export.fnt
+	}
+	title32: {
+		file: Title32.fnt
+	}
+	title32-2: {
+		file: Title32-2.fnt
 	}
 }
 com.badlogic.gdx.graphics.Color: {
@@ -201,7 +213,7 @@ com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 		checkboxOff: checkbox-t
 		checkboxOnDisabled: checkbox-checked-d
 		checkboxOffDisabled: checkbox-d
-		font: small
+		font: small16
 		fontColor: font
 		overFontColor: font-over
 		disabledFontColor: font-disabled
@@ -247,7 +259,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 	default: {
-		font: font32
+		font: title32
 		fontColor: font
 		overFontColor: font-over
 		disabledFontColor: font-disabled
@@ -328,7 +340,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
-		font: font
+		font: general-font20
 		fontColor: font
 	}
 	white: {
@@ -336,7 +348,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		fontColor: font-over
 	}
 	small: {
-		font: small
+		font: small16
 		fontColor: font
 	}
 	small-white: {
@@ -344,7 +356,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		fontColor: font-over
 	}
 	title: {
-		font: title
+		font: title32
 		fontColor: font
 	}
 	title-white: {
@@ -362,7 +374,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {
-		font: small
+		font: small16
 		fontColorSelected: font-over
 		fontColorUnselected: font-over
 		selection: list-selection
@@ -402,7 +414,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
-		font: small
+		font: small16
 		fontColor: font
 		disabledFontColor: font-disabled-alt
 		background: select-box
@@ -538,19 +550,19 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		overFontColor: font-over
 	}
 	simple-message: {
-		font: fon20
+		font: general-font20
 		fontColor: font
 		overFontColor: font
 		up: button-number
 	}
 	info-message: {
-		font: fon20
+		font: general-font20
 		fontColor: green-font
 		overFontColor: green-font
 		up: button-number
 	}
 	choice: {
-		font: fon20
+		font: general-font20
 		fontColor: font
 		overFontColor: font-over
 		disabledFontColor: font-disabled
@@ -559,10 +571,20 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		over: button-emphasis-color-over
 		disabled: button-emphasis-color-disabled
 	}
+	choice-selected: {
+		font: general-font20
+		fontColor: green-font
+		overFontColor: font-over
+		disabledFontColor: green-font
+		up: button-emphasis-color
+		down: button-emphasis-color-pressed
+		over: button-emphasis-color-over
+		disabled: button-emphasis-color-disabled
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: {
-		font: small
+		font: small16
 		fontColor: font-text-field
 		background: text-field
 		cursor: black

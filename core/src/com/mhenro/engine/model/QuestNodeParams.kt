@@ -1,7 +1,7 @@
 package com.mhenro.engine.model
 
 data class QuestNodeParams(
-        var message: String? = null,
+        var message: QuestText? = null,
         var infoMessage: Boolean? = null,
         var duration: Int? = null,
         var choices: List<QuestChoice>? = null,
