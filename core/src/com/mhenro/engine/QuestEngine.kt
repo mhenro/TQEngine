@@ -14,9 +14,11 @@ import com.mhenro.MyGdxGame
 import com.mhenro.engine.model.*
 import com.mhenro.screens.GameOverScreen
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 class QuestEngine private constructor(private val questData: QuestGame,
                                       private val game: MyGdxGame,
+                                      private var savedCompletedTime: DateTime?,
                                       private val history: MutableList<Int> = ArrayList(),
                                       private var currentNode: QuestGameNode? = null,
                                       private var currentInventory: MutableSet<Int> = HashSet(),
@@ -29,9 +31,9 @@ class QuestEngine private constructor(private val questData: QuestGame,
         const val GAME_TIMER_DELAY = 3f
         const val GAME_TIMER_REPEAT_INTERVAL = 1f
 
-        fun getEngine(game: MyGdxGame): QuestEngine {
+        fun getEngine(game: MyGdxGame, completedTime: DateTime?): QuestEngine {
             val data = Json().fromJson(QuestGame::class.java, Gdx.files.internal("quest.json"))
-            val engine = QuestEngine(data, game)
+            val engine = QuestEngine(data, game, completedTime)
             engine.validateQuest()
             return engine
         }
@@ -40,10 +42,16 @@ class QuestEngine private constructor(private val questData: QuestGame,
     init {
         gameTimer.scheduleTask(object : Timer.Task() {
             override fun run() {
+                val cellCount = (contentList.actor as Table).cells.count()
+                savedCompletedTime?.let {
+                    if (cellCount > 0) {
+                        completedTime = it
+                        savedCompletedTime = null
+                    }
+                }
                 if (completedTime > DateTime.now()) {
                     return
                 }
-                val cellCount = (contentList.actor as Table).cells.count()
                 if (isHistoryAvailable() && cellCount == 0) {
                     setCurrentNode(getHistory().last())
                     for (i in 0 until getHistory().size - 1) {
@@ -131,7 +139,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
         val duration = node.additionalParams.duration!!
         val notification = node.additionalParams.notification
 
-        val button = TextButton(msg,
+        val button = TextButton("\n$msg\n",
                 MyGdxGame.gameSkin, if (info) "info-message" else "simple-message")
         button.label.setWrap(true)
         button.label.setAlignment(Align.left, Align.left)
@@ -154,13 +162,14 @@ class QuestEngine private constructor(private val questData: QuestGame,
     private fun createAnswer(node: QuestGameNode, history: Boolean = false) {
         val choicePanel = Table()
         node.additionalParams.choices!!.forEach {
-            val btnChoice = TextButton(it.text.locale[getLanguage()], MyGdxGame.gameSkin, "choice")
+            val btnChoice = TextButton("\n${it.text.locale[getLanguage()]}\n", MyGdxGame.gameSkin, "choice")
             btnChoice.label.setWrap(true)
             btnChoice.labelCell.padTop(5f).padBottom(5f)
             choicePanel.add(btnChoice).fill().expandX()
 
             if (!MyGdxGame.questEngine.getPlayerInventoryItemIds().containsAll(it.dependsOn)) {
                 btnChoice.isDisabled = true
+                btnChoice.setText("${btnChoice.text}${MyGdxGame.i18NBundle.get("needinventory")}\n")
             }
 
             if (!history) {
@@ -173,7 +182,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
                         btnChoice.isDisabled = true
 
                         setCurrentNode(it.nextNode!!)
-                        completedTime = DateTime.now().plusMillis(100)
+                        completedTime = DateTime.now().plusMillis(node.additionalParams.duration ?: 100)
                     }
 
                     override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
@@ -194,6 +203,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
         if (!history && node.id != getPrevNode()) {
             addToHistory(node.id)
             addToInventory(node.newInventory)
+            removeFromInventory(node.removeInventory)
         }
         if (node.endNode) {
             stopQuest()
@@ -229,6 +239,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
 //        (contentList.actor as Table).row().expand()
 //        (contentList.actor as Table).add()
 //        (contentList.actor as Table).row()
+        (contentList.actor as Table).layout()
         contentList.layout()
         contentList.scrollTo(0f, 0f, 0f, 0f)
     }
@@ -274,6 +285,10 @@ class QuestEngine private constructor(private val questData: QuestGame,
 
     fun addToInventory(newItems: List<Int>) {
         currentInventory.addAll(newItems)
+    }
+
+    fun removeFromInventory(items: List<Int>) {
+        currentInventory.removeAll(items)
     }
 
     fun clearInventory() {
@@ -331,5 +346,10 @@ class QuestEngine private constructor(private val questData: QuestGame,
 
     fun stopQuest() {
         gameTimer.stop()
+    }
+
+    fun getCompletedTime(): String {
+        val formatter = DateTimeFormat.forPattern("yyyy-MM-dd hh:mm:ss")
+        return completedTime.toString(formatter)
     }
 }

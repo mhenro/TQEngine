@@ -7,5 +7,6 @@ data class QuestGameNode(
         var endNode: Boolean = false,
         var nextNode: Int? = null,
         var newInventory: List<Int> = emptyList(),
+        var removeInventory: List<Int> = emptyList(),
         var additionalParams: QuestNodeParams = QuestNodeParams()
 )

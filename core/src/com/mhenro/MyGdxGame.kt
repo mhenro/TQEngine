@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.I18NBundle
 import com.mhenro.engine.QuestEngine
 import com.mhenro.screens.MainMenuScreen
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import java.time.LocalDateTime
 import java.util.*
 
@@ -28,8 +29,20 @@ class MyGdxGame : Game() {
     }
 
     override fun create() {
-        questEngine = QuestEngine.getEngine(this)
         gamePrefs = Gdx.app.getPreferences("settings")
+
+        /* load completedTime from preferences */
+        var completedTime: DateTime?
+        if (gamePrefs.getString("completedTime").isNotBlank()) {
+            val formatter = DateTimeFormat.forPattern("yyyy-MM-dd hh:mm:ss")
+            val completedTimeStr = gamePrefs.getString("completedTime")
+            completedTime = DateTime.parse(completedTimeStr, formatter)
+        } else {
+            completedTime = null
+        }
+
+        questEngine = QuestEngine.getEngine(this, completedTime)
+
         gameSkin = Skin(Gdx.files.internal("sgxui/sgx-ui.json"))
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/main_theme.mp3"))
         soundClick = Gdx.audio.newSound(Gdx.files.internal("sounds/menu_click.mp3"))
@@ -91,6 +104,7 @@ class MyGdxGame : Game() {
     override fun pause() {
         MyGdxGame.gamePrefs.putString("history", MyGdxGame.questEngine.getHistory().joinToString())
         MyGdxGame.gamePrefs.putString("inventory", MyGdxGame.questEngine.getPlayerInventoryItemIds().joinToString())
+        MyGdxGame.gamePrefs.putString("completedTime", MyGdxGame.questEngine.getCompletedTime())
         MyGdxGame.gamePrefs.flush()
     }
 

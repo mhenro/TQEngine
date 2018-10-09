@@ -71,7 +71,7 @@ const generateView = () => {
                     "</tr>" +
                     "<tr>" +
                         "<td>New inventory</td>" +
-                        "<td>" + inventory.map(item => quest.inventory.find(element => element.id === item).name.locale["en"]) + "</td>" +
+                        "<td>" + inventory.map(item => quest.inventory.find(element => element.id === item).name.locale["ru"]) + "</td>" +
                     "</tr>" +
                     "<tr>" +
                         "<td>Duration</td>" +
@@ -93,7 +93,7 @@ const generateView = () => {
 
         /* text */
         if (node.type === 0) {
-            text = node.additionalParams.message.locale["en"]
+            text = node.additionalParams.message.locale["ru"]
         } else if (node.type === 1) {
             text = "Choice node"
         } else if (node.type === 2) {
@@ -117,7 +117,7 @@ const generateView = () => {
         let label = ""
         if (node.type === 1) {
             node.additionalParams.choices.forEach(choice => {
-                label = choice.text.locale["en"]
+                label = choice.text.locale["ru"]
                 newEdges.push({
                     from: node.id,
                     to: choice.nextNode,
@@ -129,7 +129,7 @@ const generateView = () => {
             newEdges.push({
                 from: node.id,
                 to: node.nextNode,
-                label: ""   //node.additionalParams.message.locale["en"]
+                label: ""   //node.additionalParams.message.locale["ru"]
             })
         }
     })

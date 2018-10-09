@@ -371,6 +371,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		font: medium
 		fontColor: font-over
 	}
+	tooltip: {
+		font: general-font20
+		fontColor: font
+		background: text-field-spinner
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {

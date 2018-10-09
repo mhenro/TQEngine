@@ -1,20 +1,20 @@
 package com.mhenro.screens
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
-import com.mhenro.engine.model.QuestChapter
 import com.mhenro.engine.model.QuestInventoryItem
 
 class InventoryScreen(private val game: MyGdxGame): AbstractGameScreen() {
     private val tag = InventoryScreen::class.java.simpleName
+    private lateinit var tooltipLabel: Label
 
     init {
         createLayout()
+        createTooltipLabel()
     }
 
     private fun createLayout() {
@@ -73,6 +73,23 @@ class InventoryScreen(private val game: MyGdxGame): AbstractGameScreen() {
         list.add(Image(MyGdxGame.gameSkin, "cup")).center().padRight(15f)
         list.row().padBottom(15f)
 
-//        btnItem.addListener(TextTooltip(item.description.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin))
+        btnItem.addListener(object : InputListener() {
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                tooltipLabel.setText(item.description.locale[MyGdxGame.questEngine.getLanguage()])
+                tooltipLabel.isVisible = true
+                tooltipLabel.setPosition(15f, 15f)
+                tooltipLabel.setSize(300f, 300f)
+                return true
+            }
+
+            override fun touchUp(event: InputEvent?, x: Float, y: Float, pointer: Int, button: Int) {
+                tooltipLabel.isVisible = false
+            }
+        })
+    }
+
+    private fun createTooltipLabel() {
+        tooltipLabel = Label("", MyGdxGame.gameSkin)
+        stage.addActor(tooltipLabel)
     }
 }
