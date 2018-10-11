@@ -41,14 +41,11 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
                 return true
             }
         })
-//        btnContents.addListener(TextTooltip("Contents", MyGdxGame.gameSkin))
         return btnContents
     }
 
     private fun createInventoryButton(): Actor {
         val btnInventory = ImageButton(MyGdxGame.gameSkin.getDrawable("inventory"))
-//        btnInventory.isTransform = true
-//        btnInventory.scaleBy(0.2f)
         btnInventory.addListener(object : InputListener() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
@@ -60,7 +57,6 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
                 return true
             }
         })
-//        btnInventory.addListener(TextTooltip("Inventory", MyGdxGame.gameSkin))
         return btnInventory
     }
 
@@ -79,7 +75,6 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
                 return true
             }
         })
-//        btnSettings.addListener(TextTooltip("Settings", MyGdxGame.gameSkin))
         return btnSettings
     }
 
@@ -98,7 +93,6 @@ class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
                 return true
             }
         })
-//        btnMainMenu.addListener(TextTooltip("Main menu", MyGdxGame.gameSkin))
         return btnMainMenu
     }
 

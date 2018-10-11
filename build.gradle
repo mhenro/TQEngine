@@ -76,6 +76,7 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         compile('com.android.support:support-core-utils:27.1.0')
+        implementation('com.google.android.gms:play-services-ads:17.0.0')
         compile('joda-time:joda-time:2.10')
     }
 }

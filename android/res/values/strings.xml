@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">TextQuestEngine</string>
+    <string name="app_name">StayAlive</string>
+    <string name="admob_app_id">ca-app-pub-4322047714383216~9141705385</string>
+    <string name="ad_unit_id">ca-app-pub-4322047714383216/8036098150</string>
+    <string name="admob_app_id_test">ca-app-pub-4322047714383216~9141705385</string>
+    <string name="ad_unit_id_test">ca-app-pub-3940256099942544/5224354917</string>
 
 </resources>

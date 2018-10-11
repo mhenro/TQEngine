@@ -586,6 +586,16 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		over: button-emphasis-color-over
 		disabled: button-emphasis-color-disabled
 	}
+	rewind: {
+		font: general-font20
+		fontColor: font
+		overFontColor: font-over
+		disabledFontColor: font-disabled
+		up: text-field-spinner
+		down: text-field
+		over: text-field
+		disabled: button-emphasis-color-disabled
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: {

@@ -27,6 +27,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
                                       private var completedTime: DateTime = DateTime.now(),
                                       private var contentList: ScrollPane = ScrollPane(null)) {
     companion object {
+        const val DEBUG_MODE = false
         const val ENGINE_VERSION = 1
         const val GAME_TIMER_DELAY = 3f
         const val GAME_TIMER_REPEAT_INTERVAL = 1f
@@ -49,7 +50,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
                         savedCompletedTime = null
                     }
                 }
-                if (completedTime > DateTime.now()) {
+                if (completedTime > DateTime.now() && !DEBUG_MODE) {
                     return
                 }
                 if (isHistoryAvailable() && cellCount == 0) {
@@ -133,11 +134,12 @@ class QuestEngine private constructor(private val questData: QuestGame,
         //TODO: validate inventory ids from CurrentGame object
     }
 
-    private fun createMessage(node: QuestGameNode) {
+    private fun createMessage(node: QuestGameNode, history: Boolean = false) {
         val msg = node.additionalParams.message!!.locale[getLanguage()]
         val info = node.additionalParams.infoMessage!!
         val duration = node.additionalParams.duration!!
         val notification = node.additionalParams.notification
+        val rewindIsAllowed = node.additionalParams.rewindIsAllowed
 
         val button = TextButton("\n$msg\n",
                 MyGdxGame.gameSkin, if (info) "info-message" else "simple-message")
@@ -146,6 +148,25 @@ class QuestEngine private constructor(private val questData: QuestGame,
         button.labelCell.padLeft(10f).padRight(10f)
         (contentList.actor as Table).add(button).fill().expandX().padLeft(15f).padRight(15f)
         (contentList.actor as Table).row().padBottom(5f)
+
+        rewindIsAllowed?.let {
+            if (!history) {
+                val rewindButton = TextButton(MyGdxGame.i18NBundle.get("rewind"), MyGdxGame.gameSkin, "rewind")
+                rewindButton.label.setWrap(true)
+                rewindButton.label.setAlignment(Align.left, Align.left)
+                rewindButton.labelCell.padLeft(10f).padRight(10f)
+                (contentList.actor as Table).add(rewindButton).fill().expandX().padLeft(15f).padRight(15f)
+                (contentList.actor as Table).row().padBottom(5f)
+                rewindButton.addListener(object : InputListener() {
+                    override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                        if (game.googleServices.isAdVideoLoaded()) {
+                            game.googleServices.showRewardedVideoAd()
+                        }
+                        return true
+                    }
+                })
+            }
+        }
 
         notification?.let {
             val text = it.locale[getLanguage()]!!
@@ -167,9 +188,13 @@ class QuestEngine private constructor(private val questData: QuestGame,
             btnChoice.labelCell.padTop(5f).padBottom(5f)
             choicePanel.add(btnChoice).fill().expandX()
 
-            if (!MyGdxGame.questEngine.getPlayerInventoryItemIds().containsAll(it.dependsOn)) {
+            if (!getPlayerInventoryItemIds().containsAll(it.dependsOn)) {
                 btnChoice.isDisabled = true
-                btnChoice.setText("${btnChoice.text}${MyGdxGame.i18NBundle.get("needinventory")}\n")
+                val missedInventory: MutableSet<Int> = HashSet()
+                missedInventory.addAll(it.dependsOn)
+                missedInventory.removeAll(getPlayerInventoryItemIds())
+                val missedInventoryStr = missedInventory.map { getInventoryById(it).name.locale[getLanguage()] }.joinToString(",")
+                btnChoice.setText("${btnChoice.text}\n${MyGdxGame.i18NBundle.get("needinventory")}\n[${missedInventoryStr}]")
             }
 
             if (!history) {
@@ -181,7 +206,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
                         game.playClick()
                         btnChoice.isDisabled = true
 
-                        setCurrentNode(it.nextNode!!)
+                        setCurrentNode(it.nextNode)
                         completedTime = DateTime.now().plusMillis(node.additionalParams.duration ?: 100)
                     }
 
@@ -202,8 +227,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
     private fun addNextMessage(node: QuestGameNode, history: Boolean = false) {
         if (!history && node.id != getPrevNode()) {
             addToHistory(node.id)
-            addToInventory(node.newInventory)
-            removeFromInventory(node.removeInventory)
+            addToInventory(node.newInventory.toSet())
+            removeFromInventory(node.removeInventory.toSet())
         }
         if (node.endNode) {
             stopQuest()
@@ -214,7 +239,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
         when (node.type) {
             0 -> {
                 val duration = node.additionalParams.duration!!
-                createMessage(node)
+                createMessage(node, history)
 
                 if (!history) {
                     setCurrentNode(node.nextNode!!)
@@ -252,8 +277,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
         selectedLanguage = lang
     }
 
-    fun getSupportedLanguages(): List<String> {
-        return questData.supportedLanguages
+    fun getSupportedLanguages(): Set<String> {
+        return questData.supportedLanguages.toSet()
     }
 
     fun getQuestName(): String {
@@ -283,11 +308,11 @@ class QuestEngine private constructor(private val questData: QuestGame,
         return currentInventory
     }
 
-    fun addToInventory(newItems: List<Int>) {
+    fun addToInventory(newItems: Set<Int>) {
         currentInventory.addAll(newItems)
     }
 
-    fun removeFromInventory(items: List<Int>) {
+    fun removeFromInventory(items: Set<Int>) {
         currentInventory.removeAll(items)
     }
 
@@ -305,11 +330,11 @@ class QuestEngine private constructor(private val questData: QuestGame,
     }
 
     fun isHistoryAvailable(): Boolean {
-        return history.isNotEmpty()//questData.currentGame.historyNodes.isNotEmpty()
+        return history.isNotEmpty()
     }
 
     fun getHistory(): List<Int> {
-        return history  //questData.currentGame.historyNodes
+        return history
     }
 
     fun addToHistory(nodeId: Int) {
@@ -349,7 +374,11 @@ class QuestEngine private constructor(private val questData: QuestGame,
     }
 
     fun getCompletedTime(): String {
-        val formatter = DateTimeFormat.forPattern("yyyy-MM-dd hh:mm:ss")
+        val formatter = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss")
         return completedTime.toString(formatter)
+    }
+
+    fun skipWaiting() {
+        completedTime = DateTime.now()
     }
 }

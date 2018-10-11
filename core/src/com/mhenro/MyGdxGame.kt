@@ -11,13 +11,17 @@ import com.mhenro.engine.QuestEngine
 import com.mhenro.screens.MainMenuScreen
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import java.time.LocalDateTime
 import java.util.*
 
 
-class MyGdxGame : Game() {
+class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListener {
+    init {
+        this.googleServices.setVideoEventListener(this)
+    }
+
     private val tag = MyGdxGame::class.java.simpleName
     lateinit var notificationHandler: NotificationHandler
+    var isBackToSavepointAllowed = false
 
     companion object {
         lateinit var questEngine: QuestEngine
@@ -34,7 +38,7 @@ class MyGdxGame : Game() {
         /* load completedTime from preferences */
         var completedTime: DateTime?
         if (gamePrefs.getString("completedTime").isNotBlank()) {
-            val formatter = DateTimeFormat.forPattern("yyyy-MM-dd hh:mm:ss")
+            val formatter = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss")
             val completedTimeStr = gamePrefs.getString("completedTime")
             completedTime = DateTime.parse(completedTimeStr, formatter)
         } else {
@@ -57,12 +61,21 @@ class MyGdxGame : Game() {
             MyGdxGame.questEngine.addToHistory(history)
         }
         if (gamePrefs.getString("inventory").isNotEmpty()) {
-            val inventory = gamePrefs.getString("inventory").split(",").map { it.trim().toInt() }.toList()
+            val inventory = gamePrefs.getString("inventory").split(",").map { it.trim().toInt() }.toSet()
             MyGdxGame.questEngine.addToInventory(inventory)
         }
 
         this.setScreen(MainMenuScreen(this))
     }
+
+    override fun onRewardedEvent(type: String, amount: Int) {
+        isBackToSavepointAllowed = true
+        questEngine.skipWaiting()
+    }
+
+    override fun onRewardedVideoAdLoadedEvent() {}
+
+    override fun onRewardedVideoAdClosedEvent() {}
 
     private fun loadLanguage() {
         val language = gamePrefs.getString("selectedLanguage", "en")
