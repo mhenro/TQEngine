@@ -285,6 +285,10 @@ class QuestEngine private constructor(private val questData: QuestGame,
         return questData.gameName.locale[getLanguage()]!!
     }
 
+    fun getQuestDescription(): String {
+        return questData.description.locale[getLanguage()]!!
+    }
+
     fun getStartNode(): QuestGameNode {
         val node = questData.gameNodes.find { it.startNode }
         return node ?: throw QuestParserException("Can't find start node")
@@ -357,6 +361,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
     }
 
     fun restartGame() {
+        game.notificationHandler.stopNotifications()
         clearHistory()
         clearInventory()
         setCurrentNode(getStartNode().id)

@@ -1,10 +1,12 @@
 package com.mhenro.screens
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
 import com.mhenro.MyGdxGame
+import java.lang.Exception
 
 class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
     private val tag = MainMenuScreen::class.java.simpleName
@@ -62,6 +64,17 @@ class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
 
     private fun createLikeButton(): Actor {
         val btnLike = ImageTextButton(MyGdxGame.i18NBundle.get("thumbsup"), MyGdxGame.gameSkin)
+        btnLike.addListener(object : InputListener() {
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                game.playClick()
+                try {
+                    Gdx.net.openURI("market://details?id=com.ht.dotamemes")
+                } catch (e: Exception) {
+                    Gdx.net.openURI("https://play.google.com/store/apps/details?id=com.ht.dotamemes")
+                }
+                return true
+            }
+        })
         return btnLike
     }
 
@@ -72,11 +85,29 @@ class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
 
     private fun createCreditsButton(): Actor {
         val btnCredits = ImageTextButton(MyGdxGame.i18NBundle.get("credits"), MyGdxGame.gameSkin)
+        btnCredits.addListener(object : InputListener() {
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                game.playClick()
+                game.screen = CreditsScreen(game)
+                return true
+            }
+        })
         return btnCredits
     }
 
     private fun createSocialFacebookButton(): Actor {
         val btnSocialFacebook = ImageTextButton(MyGdxGame.i18NBundle.get("followus"), MyGdxGame.gameSkin)
+        btnSocialFacebook.addListener(object : InputListener() {
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                game.playClick()
+                if (MyGdxGame.questEngine.getLanguage() == "ru") {
+                    Gdx.net.openURI("https://vk.com")
+                } else {
+                    Gdx.net.openURI("https://facebook.com")
+                }
+                return true
+            }
+        })
         return btnSocialFacebook
     }
 }

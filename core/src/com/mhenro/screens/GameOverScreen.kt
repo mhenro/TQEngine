@@ -1,13 +1,11 @@
 package com.mhenro.screens
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
-import com.mhenro.engine.model.QuestChapter
 import com.mhenro.engine.model.QuestGameNode
 
 class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGameNode): AbstractGameScreen() {

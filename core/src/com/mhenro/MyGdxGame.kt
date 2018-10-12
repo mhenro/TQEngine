@@ -53,7 +53,6 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
         loadLanguage()
         initI18NBundle()
         playMusic()
-        notificationHandler.stopNotifications()
 
         /* load previously saved data */
         if (gamePrefs.getString("history").isNotEmpty()) {
