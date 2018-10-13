@@ -25,7 +25,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
                                       private var selectedLanguage: String = "en",
                                       private val gameTimer: Timer = Timer(),
                                       private var completedTime: DateTime = DateTime.now(),
-                                      private var contentList: ScrollPane = ScrollPane(null)) {
+                                      private var contentList: ScrollPane = ScrollPane(null),
+                                      private var respawnNode: QuestGameNode? = null) {
     companion object {
         const val DEBUG_MODE = false
         const val ENGINE_VERSION = 1
@@ -233,8 +234,12 @@ class QuestEngine private constructor(private val questData: QuestGame,
         if (node.endNode) {
             stopQuest()
             game.screen = GameOverScreen(game, node)
-            restartGame()
             return
+        }
+        if (node.respawnNode) {
+//            MyGdxGame.gamePrefs.putString("history", getHistory().joinToString())
+//            MyGdxGame.gamePrefs.flush()
+            respawnNode = node
         }
         when (node.type) {
             0 -> {
@@ -378,6 +383,10 @@ class QuestEngine private constructor(private val questData: QuestGame,
         gameTimer.stop()
     }
 
+    fun resumeQuest() {
+        gameTimer.start()
+    }
+
     fun getCompletedTime(): String {
         val formatter = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss")
         return completedTime.toString(formatter)
@@ -385,5 +394,21 @@ class QuestEngine private constructor(private val questData: QuestGame,
 
     fun skipWaiting() {
         completedTime = DateTime.now()
+    }
+
+    fun respawn() {
+        respawnNode?.let {
+            setCurrentNode(it.id)
+            val newHistory = ArrayList<Int>()
+            for (item in getHistory()) {
+                if (item == it.id) {
+                    break
+                }
+                newHistory.add(item)
+            }
+            history.clear()
+            history.addAll(newHistory)
+            completedTime = DateTime.now()
+        }
     }
 }

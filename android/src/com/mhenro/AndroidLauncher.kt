@@ -56,7 +56,6 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
 
     override fun onRewarded(item: RewardItem) {
         adVideoListener?.onRewardedEvent(item.type, item.amount)
-        loadRewardedVideoAd()
     }
 
     override fun onRewardedVideoAdClosed() {

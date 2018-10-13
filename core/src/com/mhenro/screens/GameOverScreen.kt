@@ -56,6 +56,8 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
         list.add(text).center().fill().expand().padLeft(15f).padRight(15f)
         list.row()
         list.add(createBackButton()).fill().expandX().padLeft(15f).padRight(15f).padTop(30f).padBottom(30f)
+        list.row()
+        list.add(createRespawnButton()).fill().expandX().padLeft(15f).padRight(15f).padTop(30f).padBottom(30f)
 
         val scrollPane = ScrollPane(list)
         scrollPane.layout()
@@ -64,20 +66,32 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
     }
 
     private fun createBackButton(): Actor {
-        val btnStartGame = ImageTextButton("BACK TO MENU", MyGdxGame.gameSkin)
+        val btnStartGame = ImageTextButton(MyGdxGame.i18NBundle.get("back"), MyGdxGame.gameSkin)
         btnStartGame.addListener(object : InputListener() {
-            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 game.playClick()
                 MyGdxGame.questEngine.restartGame()
                 game.screen = MainMenuScreen(game)
-            }
-
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })
         return btnStartGame
     }
 
-
+    private fun createRespawnButton(): Actor {
+        val btnRespawn = ImageTextButton(MyGdxGame.i18NBundle.get("respawn"), MyGdxGame.gameSkin)
+        btnRespawn.addListener(object : InputListener() {
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                game.playClick()
+                if (game.googleServices.isAdVideoLoaded()) {
+                    game.backToSavepoint = true
+                    MyGdxGame.questEngine.stopQuest()
+                    game.googleServices.showRewardedVideoAd()
+                    game.screen = GameScreen(game)
+                }
+                return true
+            }
+        })
+        return btnRespawn
+    }
 }

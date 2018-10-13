@@ -21,7 +21,7 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
 
     private val tag = MyGdxGame::class.java.simpleName
     lateinit var notificationHandler: NotificationHandler
-    var isBackToSavepointAllowed = false
+    var backToSavepoint = false
 
     companion object {
         lateinit var questEngine: QuestEngine
@@ -68,8 +68,13 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
     }
 
     override fun onRewardedEvent(type: String, amount: Int) {
-        isBackToSavepointAllowed = true
-        questEngine.skipWaiting()
+        if (backToSavepoint) {
+            backToSavepoint = false
+            questEngine.respawn()
+            questEngine.resumeQuest()
+        } else {
+            questEngine.skipWaiting()
+        }
     }
 
     override fun onRewardedVideoAdLoadedEvent() {}

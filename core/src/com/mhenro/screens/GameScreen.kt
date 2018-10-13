@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.mhenro.MyGdxGame
 
-class GameScreen(private val game: MyGdxGame): AbstractGameScreen() {
+class GameScreen(private val game: MyGdxGame) : AbstractGameScreen() {
     private val tag = GameScreen::class.java.simpleName
     private lateinit var contentList: ScrollPane
 
