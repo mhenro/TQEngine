@@ -21,6 +21,9 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	medium: {
 		file: font-medium-export.fnt
 	}
+	new-general-font-20: {
+		file: new-general-font-20.fnt
+	}
 	small: {
 		file: font-small-export.fnt
 	}
@@ -168,6 +171,33 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 		name: checkbox-alt
 		color: check-box
 	}
+	button-choice-1: {
+		name: button-emphasis
+		color: {
+			r: 0.6153
+			g: 0.7418385
+			b: 0.9766667
+			a: 1
+		}
+	}
+	button-choice-1-pressed: {
+		name: button-emphasis-color-over
+		color: {
+			r: 0.0756
+			g: 0.21680394
+			b: 0.42
+			a: 1
+		}
+	}
+	button-choice-1-over: {
+		name: button-emphasis-color-over
+		color: {
+			r: 0.6156863
+			g: 0.7411765
+			b: 0.9764706
+			a: 1
+		}
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	default: {
@@ -213,7 +243,7 @@ com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 		checkboxOff: checkbox-t
 		checkboxOnDisabled: checkbox-checked-d
 		checkboxOffDisabled: checkbox-d
-		font: small16
+		font: new-general-font-20
 		fontColor: font
 		overFontColor: font-over
 		disabledFontColor: font-disabled
@@ -340,7 +370,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
-		font: general-font20
+		font: new-general-font-20
 		fontColor: font
 	}
 	white: {
@@ -372,7 +402,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		fontColor: font-over
 	}
 	tooltip: {
-		font: general-font20
+		font: new-general-font-20
 		fontColor: font
 		background: text-field-spinner
 	}
@@ -555,29 +585,29 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		overFontColor: font-over
 	}
 	simple-message: {
-		font: general-font20
+		font: new-general-font-20
 		fontColor: font
 		overFontColor: font
 		up: button-number
 	}
 	info-message: {
-		font: general-font20
+		font: new-general-font-20
 		fontColor: green-font
 		overFontColor: green-font
 		up: button-number
 	}
 	choice: {
-		font: general-font20
-		fontColor: font
+		font: new-general-font-20
+		fontColor: font-over
 		overFontColor: font-over
 		disabledFontColor: font-disabled
-		up: button-emphasis-color
-		down: button-emphasis-color-pressed
-		over: button-emphasis-color-over
-		disabled: button-emphasis-color-disabled
+		up: button-choice-1
+		down: button-choice-1-pressed
+		over: button-choice-1
+		disabled: button-emphasis-disabled
 	}
 	choice-selected: {
-		font: general-font20
+		font: new-general-font-20
 		fontColor: green-font
 		overFontColor: font-over
 		disabledFontColor: green-font
@@ -587,7 +617,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		disabled: button-emphasis-color-disabled
 	}
 	rewind: {
-		font: general-font20
+		font: new-general-font-20
 		fontColor: font
 		overFontColor: font-over
 		disabledFontColor: font-disabled
@@ -595,6 +625,18 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		down: text-field
 		over: text-field
 		disabled: button-emphasis-color-disabled
+	}
+	info-message-2: {
+		font: new-general-font-20
+		fontColor: green-font
+		overFontColor: green-font
+		up: list
+	}
+	simple-message-2: {
+		font: new-general-font-20
+		fontColor: font
+		overFontColor: font
+		up: list
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {

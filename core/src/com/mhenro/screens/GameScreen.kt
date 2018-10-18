@@ -18,8 +18,8 @@ class GameScreen(private val game: MyGdxGame) : AbstractGameScreen() {
     private fun createLayout() {
         wrapper.row().padTop(20f).padBottom(15f)
         wrapper.add(createContentsButton()).left().padLeft(15f)
-        wrapper.add(createInventoryButton()).expandX().left().padLeft(15f).padBottom(20f)
-        wrapper.add(createSettingsButton()).right().padRight(15f)
+        wrapper.add(createInventoryButton()).expandX().left().padLeft(60f).padBottom(20f)
+        wrapper.add(createSettingsButton()).right().padRight(60f)
         wrapper.add(createMainMenuButton()).right().padRight(25f)
         wrapper.row().padBottom(5f).padTop(5f)
         wrapper.add(createContentList()).fill().expand().colspan(4)

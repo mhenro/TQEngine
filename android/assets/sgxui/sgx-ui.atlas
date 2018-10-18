@@ -4,18 +4,18 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-forest
-  rotate: false
-  xy: 1, 515
-  size: 640, 424
-  orig: 640, 424
-  offset: 0, 0
-  index: -1
-font16
+photo-plan
   rotate: false
   xy: 1, 1
-  size: 512, 512
-  orig: 512, 512
+  size: 780, 493
+  orig: 780, 493
+  offset: 0, 0
+  index: -1
+photo-street
+  rotate: false
+  xy: 1, 496
+  size: 800, 450
+  orig: 800, 450
   offset: 0, 0
   index: -1
 
@@ -24,7 +24,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-font24
+font16
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -37,7 +37,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-fon20
+font24
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -50,7 +50,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-fon201
+fon20
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -63,7 +63,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-fon202
+fon201
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -76,7 +76,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-fon203
+fon202
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -89,7 +89,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-font321
+fon203
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -102,7 +102,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-font322
+font321
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -115,7 +115,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-font32
+font322
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -128,7 +128,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-small16
+font32
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -141,7 +141,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-Title32
+small16
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -154,7 +154,7 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-Title32-2
+Title32
   rotate: false
   xy: 1, 1
   size: 512, 512
@@ -167,6 +167,32 @@ size: 1024,1024
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+Title32-2
+  rotate: false
+  xy: 1, 1
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+sgx-ui14.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+general-font20
+  rotate: false
+  xy: 1, 1
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+
+sgx-ui15.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
 cup
   rotate: false
   xy: 306, 186
@@ -174,18 +200,18 @@ cup
   orig: 22, 24
   offset: 0, 0
   index: -1
-general-font20
-  rotate: false
-  xy: 1, 511
-  size: 512, 512
-  orig: 512, 512
-  offset: 0, 0
-  index: -1
 inventory
   rotate: false
   xy: 832, 966
   size: 24, 24
   orig: 24, 24
+  offset: 0, 0
+  index: -1
+new-general-font-20
+  rotate: false
+  xy: 1, 511
+  size: 512, 512
+  orig: 512, 512
   offset: 0, 0
   index: -1
 book

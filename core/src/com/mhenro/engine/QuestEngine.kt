@@ -143,12 +143,12 @@ class QuestEngine private constructor(private val questData: QuestGame,
         val rewindIsAllowed = node.additionalParams.rewindIsAllowed
 
         val button = TextButton("\n$msg\n",
-                MyGdxGame.gameSkin, if (info) "info-message" else "simple-message")
+                MyGdxGame.gameSkin, if (info) "info-message-2" else "simple-message-2")
         button.label.setWrap(true)
         button.label.setAlignment(Align.left, Align.left)
         button.labelCell.padLeft(10f).padRight(10f)
         (contentList.actor as Table).add(button).fill().expandX().padLeft(15f).padRight(15f)
-        (contentList.actor as Table).row().padBottom(5f)
+        (contentList.actor as Table).row()//.padBottom(5f)
 
         rewindIsAllowed?.let {
             if (!history) {
@@ -157,7 +157,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
                 rewindButton.label.setAlignment(Align.left, Align.left)
                 rewindButton.labelCell.padLeft(10f).padRight(10f)
                 (contentList.actor as Table).add(rewindButton).fill().expandX().padLeft(15f).padRight(15f)
-                (contentList.actor as Table).row().padBottom(5f)
+                (contentList.actor as Table).row()//.padBottom(5f)
                 rewindButton.addListener(object : InputListener() {
                     override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                         if (game.googleServices.isAdVideoLoaded()) {
@@ -178,7 +178,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
     private fun createImage(imgLocation: String) {
         val image = Image(MyGdxGame.gameSkin, imgLocation)
         (contentList.actor as Table).add(image).center().padLeft(15f).padRight(15f).padTop(30f).padBottom(30f)
-        (contentList.actor as Table).row().padBottom(5f)
+        (contentList.actor as Table).row()//.padBottom(5f)
     }
 
     private fun createAnswer(node: QuestGameNode, history: Boolean = false) {
@@ -217,7 +217,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
                 })
             }
         }
-        (contentList.actor as Table).add(choicePanel).fill().expandX().padLeft(15f).padRight(15f).padBottom(5f)
+        (contentList.actor as Table).add(choicePanel).fill().expandX().padLeft(15f).padRight(15f)//.padBottom(5f)
         (contentList.actor as Table).row()
 
 //        (contentList.actor as Table).row().expand()

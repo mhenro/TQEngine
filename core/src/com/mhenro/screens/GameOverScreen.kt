@@ -13,6 +13,7 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
 
     init {
         createLayout()
+        MyGdxGame.questEngine.stopQuest()
     }
 
     private fun createLayout() {
@@ -35,13 +36,10 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
         btnClose.isTransform = true
         btnClose.scaleBy(0.5f)
         btnClose.addListener(object : InputListener() {
-            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 game.playClick()
                 MyGdxGame.questEngine.restartGame()
                 game.screen = MainMenuScreen(game)
-            }
-
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })
@@ -85,7 +83,6 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
                 game.playClick()
                 if (game.googleServices.isAdVideoLoaded()) {
                     game.backToSavepoint = true
-                    MyGdxGame.questEngine.stopQuest()
                     game.googleServices.showRewardedVideoAd()
                     game.screen = GameScreen(game)
                 }
