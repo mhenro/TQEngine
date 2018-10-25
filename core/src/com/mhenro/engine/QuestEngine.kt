@@ -26,7 +26,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
                                       private val gameTimer: Timer = Timer(),
                                       private var completedTime: DateTime = DateTime.now(),
                                       private var contentList: ScrollPane = ScrollPane(null),
-                                      private var respawnNode: QuestGameNode? = null) {
+                                      private var respawnNode: QuestGameNode? = null,
+                                      private var completedChapters: MutableSet<Int> = HashSet()) {
     companion object {
         const val DEBUG_MODE = false
         const val ENGINE_VERSION = 1
@@ -160,6 +161,10 @@ class QuestEngine private constructor(private val questData: QuestGame,
                 (contentList.actor as Table).row()//.padBottom(5f)
                 rewindButton.addListener(object : InputListener() {
                     override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                        if (!game.networkManager.isNetworkAvailable()) {
+                            game.showLongToast(MyGdxGame.i18NBundle.get("internet-connection"))
+                            return false
+                        }
                         if (game.googleServices.isAdVideoLoaded()) {
                             game.googleServices.showRewardedVideoAd()
                         }
@@ -226,6 +231,10 @@ class QuestEngine private constructor(private val questData: QuestGame,
     }
 
     private fun addNextMessage(node: QuestGameNode, history: Boolean = false) {
+        /* updating contents of the quest */
+        val chapterId = getChapterIdForCurrentNode(node.id)
+        addToCompletedChapters(chapterId)
+
         if (!history && node.id != getPrevNode()) {
             addToHistory(node.id)
             addToInventory(node.newInventory.toSet())
@@ -249,6 +258,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
                 if (!history) {
                     setCurrentNode(node.nextNode!!)
                     completedTime = DateTime.now().plusMillis(duration)
+                    game.messageReceived()
                 }
             }
             1 -> {
@@ -262,6 +272,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
                 if (!history) {
                     setCurrentNode(node.nextNode!!)
                     completedTime = DateTime.now().plusMillis(duration)
+                    game.messageReceived()
                 }
             }
         }
@@ -354,6 +365,32 @@ class QuestEngine private constructor(private val questData: QuestGame,
         history.addAll(nodeIds)
     }
 
+    fun getChapterIdForCurrentNode(nodeId: Int): Int {
+        var chapterId = 0
+        questData.contents.forEach {
+            if (it.startFromNode <= nodeId) {
+                chapterId = it.id
+            }
+        }
+        return chapterId
+    }
+
+    fun addToCompletedChapters(chapterId: Int) {
+        completedChapters.add(chapterId)
+    }
+
+    fun addToCompletedChapters(chapterIds: Set<Int>) {
+        completedChapters.addAll(chapterIds)
+    }
+
+    fun clearCompletedChapters() {
+        completedChapters.clear()
+    }
+
+    fun getCompletedChapters(): Set<Int> {
+        return completedChapters
+    }
+
     fun getPrevNode(): Int? {
         if (history.isNotEmpty()) {
             return history.last()
@@ -369,6 +406,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
         game.notificationHandler.stopNotifications()
         clearHistory()
         clearInventory()
+        clearCompletedChapters()
         setCurrentNode(getStartNode().id)
     }
 
@@ -410,5 +448,29 @@ class QuestEngine private constructor(private val questData: QuestGame,
             history.addAll(newHistory)
             completedTime = DateTime.now()
         }
+    }
+
+    fun rewindToChapter(nodeId: Int) {
+        setCurrentNode(nodeId)
+        val newHistory = ArrayList<Int>()
+        for (item in getHistory()) {
+            if (item == nodeId) {
+                break
+            }
+            newHistory.add(item)
+        }
+        history.clear()
+        history.addAll(newHistory)
+        completedTime = DateTime.now()
+
+        /* remove chapters after the current chapter */
+        val newContents = HashSet<Int>()
+        val currentChapter = questData.contents.findLast { it.startFromNode == nodeId }?.id ?: Integer.MAX_VALUE
+        completedChapters.forEach {
+            if (currentChapter > it) {
+                newContents.add(it)
+            }
+        }
+        completedChapters = newContents
     }
 }

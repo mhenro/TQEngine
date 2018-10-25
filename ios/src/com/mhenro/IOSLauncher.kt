@@ -5,13 +5,23 @@ import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration
 import org.robovm.apple.foundation.NSAutoreleasePool
 import org.robovm.apple.uikit.UIApplication
 
-class IOSLauncher: IOSApplication.Delegate() {
+class IOSLauncher: IOSApplication.Delegate(), GoogleServices {
     override fun createApplication(): IOSApplication {
         val config = IOSApplicationConfiguration()
-        val game = MyGdxGame()
+        val game = MyGdxGame(this)
         game.notificationHandler = IOSNotificationImpl()
         return IOSApplication(game, config)
     }
+
+    override fun isAdVideoLoaded(): Boolean {
+        return true
+    }
+
+    override fun loadRewardedVideoAd() {}
+
+    override fun showRewardedVideoAd() {}
+
+    override fun setVideoEventListener(listener: AdVideoEventListener) {}
 }
 
 fun main(argv: Array<String>) {

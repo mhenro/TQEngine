@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.I18NBundle
 import com.mhenro.engine.QuestEngine
 import com.mhenro.screens.MainMenuScreen
+import com.mhenro.utils.Toast
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.*
@@ -21,12 +22,16 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
 
     private val tag = MyGdxGame::class.java.simpleName
     lateinit var notificationHandler: NotificationHandler
+    lateinit var networkManager: NetworkManager
     var backToSavepoint = false
+    private val toasts = LinkedList<Toast>()
+    private lateinit var toastFactory: Toast.ToastFactory
 
     companion object {
         lateinit var questEngine: QuestEngine
         lateinit var gameSkin: Skin
         lateinit var soundClick: Sound
+        lateinit var messageReceived: Sound
         lateinit var music: Music
         lateinit var gamePrefs: Preferences
         lateinit var i18NBundle: I18NBundle
@@ -49,7 +54,8 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
 
         gameSkin = Skin(Gdx.files.internal("sgxui/sgx-ui.json"))
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/main_theme.mp3"))
-        soundClick = Gdx.audio.newSound(Gdx.files.internal("sounds/menu_click.mp3"))
+        soundClick = Gdx.audio.newSound(Gdx.files.internal("sounds/click.mp3"))
+        messageReceived = Gdx.audio.newSound(Gdx.files.internal("sounds/notification-2.mp3"))
         loadLanguage()
         initI18NBundle()
         playMusic()
@@ -63,6 +69,15 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
             val inventory = gamePrefs.getString("inventory").split(",").map { it.trim().toInt() }.toSet()
             MyGdxGame.questEngine.addToInventory(inventory)
         }
+        if (gamePrefs.getString("completedChapters").isNotEmpty()) {
+            val completedChapters = gamePrefs.getString("completedChapters").split(",").map { it.trim().toInt() }.toSet()
+            MyGdxGame.questEngine.addToCompletedChapters(completedChapters)
+        }
+
+        /* create toast factory */
+        toastFactory = Toast.ToastFactory.Builder()
+                .font(MyGdxGame.gameSkin.getFont("new-general-font-20"))
+                .build()
 
         this.setScreen(MainMenuScreen(this))
     }
@@ -103,14 +118,41 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
 
     fun playClick() {
         if (gamePrefs.getBoolean("soundEnabled", true)) {
-            soundClick.play(0.2f)
+            soundClick.play()
         } else {
             soundClick.stop()
         }
     }
 
+    fun messageReceived() {
+        if (gamePrefs.getBoolean("soundEnabled", true)) {
+            messageReceived.play()
+        } else {
+            messageReceived.stop()
+        }
+    }
+
+    fun showLongToast(message: String) {
+        toasts.add(toastFactory.create(message, Toast.Length.LONG))
+    }
+
+    fun showShortToast(message: String) {
+        toasts.add(toastFactory.create(message, Toast.Length.SHORT))
+    }
+
     override fun render() {
         super.render()
+
+        /* handle toast queue and display */
+        val it = toasts.iterator()
+        while (it.hasNext()) {
+            val t = it.next()
+            if (!t.render(Gdx.graphics.deltaTime)) {
+                it.remove() // toast finished -> remove
+            } else {
+                break // first toast still active, break the loop
+            }
+        }
 
 //
 //        batch.begin()
@@ -122,6 +164,7 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
         MyGdxGame.gamePrefs.putString("history", MyGdxGame.questEngine.getHistory().joinToString())
         MyGdxGame.gamePrefs.putString("inventory", MyGdxGame.questEngine.getPlayerInventoryItemIds().joinToString())
         MyGdxGame.gamePrefs.putString("completedTime", MyGdxGame.questEngine.getCompletedTime())
+        MyGdxGame.gamePrefs.putString("completedChapters", MyGdxGame.questEngine.getCompletedChapters().joinToString())
         MyGdxGame.gamePrefs.flush()
     }
 

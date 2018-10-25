@@ -31,6 +31,8 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
         val game = MyGdxGame(this)
         val notificationHandler = AndroidNotificationImpl(this)
         game.notificationHandler = notificationHandler
+        val networkManager = NetworkManagerImpl(this)
+        game.networkManager = networkManager
         config.useAccelerometer = false
         config.useCompass = false
 

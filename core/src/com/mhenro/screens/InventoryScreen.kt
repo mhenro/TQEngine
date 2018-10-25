@@ -27,7 +27,7 @@ class InventoryScreen(private val game: MyGdxGame): AbstractGameScreen() {
     }
 
     private fun createTitle(): Actor {
-        val title = Label("\nINVENTORY\n", MyGdxGame.gameSkin, "title")
+        val title = Label("\n${MyGdxGame.i18NBundle.get("inventory")}\n", MyGdxGame.gameSkin, "title")
         title.setAlignment(Align.center)
         return title
     }

@@ -26,7 +26,7 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
     }
 
     private fun createTitle(): Actor {
-        val title = Label("\nCONTENTS\n", MyGdxGame.gameSkin, "title")
+        val title = Label("\n${MyGdxGame.i18NBundle.get("contents")}\n", MyGdxGame.gameSkin, "title")
         title.setAlignment(Align.center)
         return title
     }
@@ -52,7 +52,7 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
         val list = Table()
         for (i in 0 until MyGdxGame.questEngine.getContents().size) {
             val chapter = MyGdxGame.questEngine.getContents()[i]
-            if (i == 0 || chapter.completed) {
+            if (i == 0 || MyGdxGame.questEngine.getCompletedChapters().contains(i)) {
                 createListElement(list, chapter, i == 0)
             }
         }
@@ -75,17 +75,18 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
         list.row().padBottom(15f)
 
         btnBookmark.addListener(object : InputListener() {
-            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 game.playClick()
                 Gdx.app.log(tag, "Goto node #${chapter.id}")
 
                 if (restart) {
                     MyGdxGame.questEngine.restartGame()
                     game.screen = GameScreen(game)
+                } else {
+                    MyGdxGame.questEngine.rewindToChapter(chapter.startFromNode)
+                    game.screen = GameScreen(game)
                 }
-            }
 
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })

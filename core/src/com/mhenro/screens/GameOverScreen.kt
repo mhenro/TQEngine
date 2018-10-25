@@ -26,7 +26,7 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
     }
 
     private fun createTitle(): Actor {
-        val title = Label("\nGAME OVER\n", MyGdxGame.gameSkin, "title")
+        val title = Label("\n${MyGdxGame.i18NBundle.get("gameover")}\n", MyGdxGame.gameSkin, "title")
         title.setAlignment(Align.center)
         return title
     }
@@ -55,7 +55,11 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
         list.row()
         list.add(createBackButton()).fill().expandX().padLeft(15f).padRight(15f).padTop(30f).padBottom(30f)
         list.row()
-        list.add(createRespawnButton()).fill().expandX().padLeft(15f).padRight(15f).padTop(30f).padBottom(30f)
+        endNode.additionalParams.rewindIsAllowed?.let {
+            if (it) {
+                list.add(createRespawnButton()).fill().expandX().padLeft(15f).padRight(15f).padTop(30f).padBottom(30f)
+            }
+        }
 
         val scrollPane = ScrollPane(list)
         scrollPane.layout()
@@ -81,6 +85,10 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
         btnRespawn.addListener(object : InputListener() {
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 game.playClick()
+                if (!game.networkManager.isNetworkAvailable()) {
+                    game.showLongToast(MyGdxGame.i18NBundle.get("internet-connection"))
+                    return false
+                }
                 if (game.googleServices.isAdVideoLoaded()) {
                     game.backToSavepoint = true
                     game.googleServices.showRewardedVideoAd()
