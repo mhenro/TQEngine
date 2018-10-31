@@ -1,6 +1,7 @@
 package com.mhenro.screens
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
@@ -52,7 +53,7 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
         val list = Table()
         for (i in 0 until MyGdxGame.questEngine.getContents().size) {
             val chapter = MyGdxGame.questEngine.getContents()[i]
-            if (i == 0 || MyGdxGame.questEngine.getCompletedChapters().contains(i)) {
+            if (i == 0 || MyGdxGame.questEngine.getCompletedChapters().contains(i) || MyGdxGame.questEngine.getCompletedChapters().max()!! >= i) {
                 createListElement(list, chapter, i == 0)
             }
         }
@@ -90,5 +91,13 @@ class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
                 return true
             }
         })
+    }
+
+    override fun render(delta: Float) {
+        super.render(delta)
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            game.playClick()
+            game.screen = GameScreen(game, true)
+        }
     }
 }

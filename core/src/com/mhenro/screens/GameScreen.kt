@@ -1,12 +1,15 @@
 package com.mhenro.screens
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.mhenro.MyGdxGame
 
-class GameScreen(private val game: MyGdxGame) : AbstractGameScreen() {
+class GameScreen(private val game: MyGdxGame,
+                 private var doNotBack: Boolean = false) : AbstractGameScreen() {
     private val tag = GameScreen::class.java.simpleName
     private lateinit var contentList: ScrollPane
 
@@ -68,7 +71,7 @@ class GameScreen(private val game: MyGdxGame) : AbstractGameScreen() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
                 MyGdxGame.questEngine.stopQuest()
-                game.screen = OptionsScreen(game, GameScreen::class.java)
+                game.screen = OptionsScreen(game)
             }
 
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
@@ -101,5 +104,19 @@ class GameScreen(private val game: MyGdxGame) : AbstractGameScreen() {
         contentList = ScrollPane(table)
         contentList.setScrollingDisabled(true, false)
         return contentList
+    }
+
+    override fun render(delta: Float) {
+        super.render(delta)
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            if (!doNotBack) {
+                game.playClick()
+                game.screen = MainMenuScreen(game)
+            }
+        } else {
+            if (doNotBack) {
+                doNotBack = false
+            }
+        }
     }
 }

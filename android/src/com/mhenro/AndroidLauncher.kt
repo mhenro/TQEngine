@@ -1,6 +1,7 @@
 package com.mhenro
 
 import android.os.Bundle
+import android.os.StrictMode
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.badlogic.gdx.backends.android.AndroidApplication
@@ -40,6 +41,19 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
         val layout = RelativeLayout(this)
         layout.addView(gameView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         setContentView(layout)
+//        enableStrictMode()
+    }
+
+    private fun enableStrictMode() {
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(
+                    StrictMode.ThreadPolicy.Builder().detectAll()
+                            .penaltyLog().penaltyDeath().build())
+            StrictMode.setVmPolicy(
+                    StrictMode.VmPolicy.Builder().detectAll()
+                            .penaltyLog().penaltyDeath().build()
+            )
+        }
     }
 
     override fun loadRewardedVideoAd() {

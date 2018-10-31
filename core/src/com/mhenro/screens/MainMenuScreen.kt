@@ -23,12 +23,12 @@ class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
         wrapper.row().padLeft(5f).padRight(5f)
         wrapper.add(createLikeButton()).fill().expand()
         wrapper.row().padLeft(5f).padRight(5f)
-        wrapper.add(createQuestMarketButton()).fill().expand()
-        wrapper.row().padLeft(5f).padRight(5f)
+        //wrapper.add(createQuestMarketButton()).fill().expand()
+        //wrapper.row().padLeft(5f).padRight(5f)
         wrapper.add(createCreditsButton()).fill().expand()
         wrapper.row().padLeft(5f).padRight(5f)
-        wrapper.add(createSocialFacebookButton()).fill().expand()
-        wrapper.row().padLeft(5f).padRight(5f).padBottom(5f)
+        //wrapper.add(createSocialFacebookButton()).fill().expand()
+        //wrapper.row().padLeft(5f).padRight(5f).padBottom(5f)
         wrapper.layout()
     }
 
@@ -52,7 +52,7 @@ class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
         btnOptions.addListener(object : InputListener() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
-                game.screen = OptionsScreen(game, MainMenuScreen::class.java)
+                game.screen = OptionsScreen(game)
             }
 
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
@@ -65,13 +65,16 @@ class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
     private fun createLikeButton(): Actor {
         val btnLike = ImageTextButton(MyGdxGame.i18NBundle.get("thumbsup"), MyGdxGame.gameSkin)
         btnLike.addListener(object : InputListener() {
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
                 try {
-                    Gdx.net.openURI("market://details?id=com.ht.dotamemes")
+                    Gdx.net.openURI("market://details?id=com.mhenro")
                 } catch (e: Exception) {
-                    Gdx.net.openURI("https://play.google.com/store/apps/details?id=com.ht.dotamemes")
+                    Gdx.net.openURI("https://play.google.com/store/apps/details?id=com.mhenro")
                 }
+            }
+
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })
@@ -86,9 +89,12 @@ class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
     private fun createCreditsButton(): Actor {
         val btnCredits = ImageTextButton(MyGdxGame.i18NBundle.get("credits"), MyGdxGame.gameSkin)
         btnCredits.addListener(object : InputListener() {
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
                 game.screen = CreditsScreen(game)
+            }
+
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })
@@ -98,13 +104,16 @@ class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
     private fun createSocialFacebookButton(): Actor {
         val btnSocialFacebook = ImageTextButton(MyGdxGame.i18NBundle.get("followus"), MyGdxGame.gameSkin)
         btnSocialFacebook.addListener(object : InputListener() {
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
                 if (MyGdxGame.questEngine.getLanguage() == "ru") {
                     Gdx.net.openURI("https://vk.com")
                 } else {
                     Gdx.net.openURI("https://facebook.com")
                 }
+            }
+
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })

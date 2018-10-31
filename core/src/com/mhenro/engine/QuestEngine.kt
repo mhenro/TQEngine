@@ -160,14 +160,17 @@ class QuestEngine private constructor(private val questData: QuestGame,
                 (contentList.actor as Table).add(rewindButton).fill().expandX().padLeft(15f).padRight(15f)
                 (contentList.actor as Table).row()//.padBottom(5f)
                 rewindButton.addListener(object : InputListener() {
-                    override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                    override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                         if (!game.networkManager.isNetworkAvailable()) {
                             game.showLongToast(MyGdxGame.i18NBundle.get("internet-connection"))
-                            return false
+                            return
                         }
                         if (game.googleServices.isAdVideoLoaded()) {
                             game.googleServices.showRewardedVideoAd()
                         }
+                    }
+
+                    override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                         return true
                     }
                 })
@@ -200,7 +203,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
                 missedInventory.addAll(it.dependsOn)
                 missedInventory.removeAll(getPlayerInventoryItemIds())
                 val missedInventoryStr = missedInventory.map { getInventoryById(it).name.locale[getLanguage()] }.joinToString(",")
-                btnChoice.setText("${btnChoice.text}\n${MyGdxGame.i18NBundle.get("needinventory")}\n[${missedInventoryStr}]")
+                btnChoice.setText("${btnChoice.text}\n${MyGdxGame.i18NBundle.get("needinventory")}\n[$missedInventoryStr]")
             }
 
             if (!history) {

@@ -1,5 +1,7 @@
 package com.mhenro.screens
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
@@ -22,10 +24,14 @@ class CreditsScreen(private val game: MyGdxGame) : AbstractGameScreen() {
         val container = VerticalGroup()
         val labelName = Label("\n\n\n\n${MyGdxGame.questEngine.getQuestName()}\n\n\n\n", MyGdxGame.gameSkin)
         val labelCredits = Label("${MyGdxGame.i18NBundle.get("authors")}\n\n", MyGdxGame.gameSkin)
-        val labelAuthor1 = Label("${MyGdxGame.i18NBundle.get("author1")}\n\n\n\n", MyGdxGame.gameSkin)
+        val labelAuthor1 = Label("${MyGdxGame.i18NBundle.get("author1")}\n", MyGdxGame.gameSkin)
+        val labelAuthor2 = Label("${MyGdxGame.i18NBundle.get("author2")}\n", MyGdxGame.gameSkin)
+        val labelAuthor3 = Label("${MyGdxGame.i18NBundle.get("author3")}\n\n\n\n", MyGdxGame.gameSkin)
         container.addActor(labelName)
         container.addActor(labelCredits)
         container.addActor(labelAuthor1)
+        container.addActor(labelAuthor2)
+        container.addActor(labelAuthor3)
         container.width = stage.width
         container.height = stage.height
         container.setPosition(0f, -stage.height)
@@ -57,14 +63,26 @@ class CreditsScreen(private val game: MyGdxGame) : AbstractGameScreen() {
     }
 
     private fun createBackButton(): Actor {
-        val btnStartGame = ImageTextButton("BACK TO MENU", MyGdxGame.gameSkin)
+        val btnStartGame = ImageTextButton("\n${MyGdxGame.i18NBundle.get("back")}\n", MyGdxGame.gameSkin)
         btnStartGame.addListener(object : InputListener() {
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
                 game.screen = MainMenuScreen(game)
+            }
+
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })
+        btnStartGame.addAction(Actions.sequence(Actions.fadeOut(0.0001f), Actions.fadeOut(10f), Actions.fadeIn(2f)))
         return btnStartGame
+    }
+
+    override fun render(delta: Float) {
+        super.render(delta)
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            game.playClick()
+            game.screen = MainMenuScreen(game)
+        }
     }
 }

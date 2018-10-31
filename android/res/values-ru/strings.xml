@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Stay Alive</string>
+    <string name="app_name">Остаться в живых</string>
     <string name="admob_app_id">ca-app-pub-4322047714383216~9141705385</string>
     <string name="ad_unit_id">ca-app-pub-4322047714383216/8036098150</string>
     <string name="admob_app_id_test">ca-app-pub-4322047714383216~9141705385</string>

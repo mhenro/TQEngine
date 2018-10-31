@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.viewport.ExtendViewport
-import com.mhenro.MyGdxGame
 
 abstract class AbstractGameScreen: Screen {
     protected val stage = Stage(ExtendViewport(480f, 800f))
@@ -21,6 +20,8 @@ abstract class AbstractGameScreen: Screen {
 
      override fun show() {
          Gdx.input.inputProcessor = stage
+         Gdx.input.isCatchBackKey = true
+         Gdx.input.isCatchMenuKey = true
      }
 
      override fun render(delta: Float) {

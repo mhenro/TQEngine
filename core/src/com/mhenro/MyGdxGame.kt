@@ -8,12 +8,11 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.I18NBundle
 import com.mhenro.engine.QuestEngine
-import com.mhenro.screens.MainMenuScreen
+import com.mhenro.screens.SplashScreen
 import com.mhenro.utils.Toast
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import java.util.*
-
 
 class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListener {
     init {
@@ -38,6 +37,9 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
     }
 
     override fun create() {
+        gameSkin = Skin(Gdx.files.internal("sgxui/sgx-ui.json"))
+//        this.setScreen(SplashScreen(this))
+
         gamePrefs = Gdx.app.getPreferences("settings")
 
         /* load completedTime from preferences */
@@ -52,7 +54,6 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
 
         questEngine = QuestEngine.getEngine(this, completedTime)
 
-        gameSkin = Skin(Gdx.files.internal("sgxui/sgx-ui.json"))
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/main_theme.mp3"))
         soundClick = Gdx.audio.newSound(Gdx.files.internal("sounds/click.mp3"))
         messageReceived = Gdx.audio.newSound(Gdx.files.internal("sounds/notification-2.mp3"))
@@ -79,7 +80,8 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
                 .font(MyGdxGame.gameSkin.getFont("new-general-font-20"))
                 .build()
 
-        this.setScreen(MainMenuScreen(this))
+//        this.setScreen(MainMenuScreen(this))
+        this.setScreen(SplashScreen(this))
     }
 
     override fun onRewardedEvent(type: String, amount: Int) {
@@ -97,7 +99,7 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
     override fun onRewardedVideoAdClosedEvent() {}
 
     private fun loadLanguage() {
-        val language = gamePrefs.getString("selectedLanguage", "en")
+        val language = "ru" //TODO: gamePrefs.getString("selectedLanguage", "en")
         MyGdxGame.questEngine.setLanguage(language)
     }
 

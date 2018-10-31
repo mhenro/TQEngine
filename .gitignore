@@ -125,3 +125,7 @@ Thumbs.db
 /ios-moe/xcode/native/
 
 android/build/*
+
+android/release
+*.der
+*.jks

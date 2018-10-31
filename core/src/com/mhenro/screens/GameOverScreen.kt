@@ -3,6 +3,7 @@ package com.mhenro.screens
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
@@ -36,10 +37,13 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
         btnClose.isTransform = true
         btnClose.scaleBy(0.5f)
         btnClose.addListener(object : InputListener() {
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
                 MyGdxGame.questEngine.restartGame()
                 game.screen = MainMenuScreen(game)
+            }
+
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })
@@ -68,35 +72,43 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
     }
 
     private fun createBackButton(): Actor {
-        val btnStartGame = ImageTextButton(MyGdxGame.i18NBundle.get("back"), MyGdxGame.gameSkin)
+        val btnStartGame = ImageTextButton("\n${MyGdxGame.i18NBundle.get("back")}\n", MyGdxGame.gameSkin)
         btnStartGame.addListener(object : InputListener() {
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
                 MyGdxGame.questEngine.restartGame()
                 game.screen = MainMenuScreen(game)
+            }
+
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })
+        btnStartGame.addAction(Actions.sequence(Actions.fadeOut(0.0001f), Actions.fadeIn(2f)))
         return btnStartGame
     }
 
     private fun createRespawnButton(): Actor {
-        val btnRespawn = ImageTextButton(MyGdxGame.i18NBundle.get("respawn"), MyGdxGame.gameSkin)
+        val btnRespawn = ImageTextButton("\n${MyGdxGame.i18NBundle.get("respawn")}\n", MyGdxGame.gameSkin)
         btnRespawn.addListener(object : InputListener() {
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
                 if (!game.networkManager.isNetworkAvailable()) {
                     game.showLongToast(MyGdxGame.i18NBundle.get("internet-connection"))
-                    return false
+                    return
                 }
                 if (game.googleServices.isAdVideoLoaded()) {
                     game.backToSavepoint = true
                     game.googleServices.showRewardedVideoAd()
                     game.screen = GameScreen(game)
                 }
+            }
+
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })
+        btnRespawn.addAction(Actions.sequence(Actions.fadeOut(0.0001f), Actions.fadeIn(2f)))
         return btnRespawn
     }
 }

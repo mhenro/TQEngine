@@ -1,5 +1,7 @@
 package com.mhenro.screens
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
@@ -37,12 +39,9 @@ class InventoryScreen(private val game: MyGdxGame): AbstractGameScreen() {
         btnClose.isTransform = true
         btnClose.scaleBy(0.5f)
         btnClose.addListener(object : InputListener() {
-            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 game.playClick()
                 game.screen = GameScreen(game)
-            }
-
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 return true
             }
         })
@@ -91,5 +90,13 @@ class InventoryScreen(private val game: MyGdxGame): AbstractGameScreen() {
     private fun createTooltipLabel() {
         tooltipLabel = Label("", MyGdxGame.gameSkin)
         stage.addActor(tooltipLabel)
+    }
+
+    override fun render(delta: Float) {
+        super.render(delta)
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            game.playClick()
+            game.screen = GameScreen(game, true)
+        }
     }
 }

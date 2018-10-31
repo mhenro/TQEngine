@@ -35,7 +35,7 @@ class AlarmReceiver: BroadcastReceiver() {
     private fun buildLocalNotification(context: Context, pendingIntent: PendingIntent, title: String, text: String): Notification {
         return NotificationCompat.Builder(context)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(com.mhenro.R.drawable.ic_launcher)
+                .setSmallIcon(com.mhenro.R.drawable.icon)
                 .setContentTitle(title)
                 .setContentText(text)
                 .setAutoCancel(true)

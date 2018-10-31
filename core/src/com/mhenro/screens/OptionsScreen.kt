@@ -1,6 +1,7 @@
 package com.mhenro.screens
 
-import com.badlogic.gdx.Screen
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
@@ -9,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
 
-class OptionsScreen(private val game: MyGdxGame, private val backScreen: Class<out Screen>?): AbstractGameScreen() {
+class OptionsScreen(private val game: MyGdxGame): AbstractGameScreen() {
     private val tag = OptionsScreen::class.java.simpleName
 
     init {
@@ -36,12 +37,9 @@ class OptionsScreen(private val game: MyGdxGame, private val backScreen: Class<o
         btnClose.isTransform = true
         btnClose.scaleBy(0.5f)
         btnClose.addListener(object : InputListener() {
-            override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
-                game.playClick()
-                game.screen = backScreen?.getDeclaredConstructor(MyGdxGame::class.java)?.newInstance(game) ?: MainMenuScreen(game)
-            }
-
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                game.playClick()
+                game.screen = MainMenuScreen(game)
                 return true
             }
         })
@@ -65,7 +63,7 @@ class OptionsScreen(private val game: MyGdxGame, private val backScreen: Class<o
 
     private fun createSoundCheckbox(list: Table) {
         list.row().padBottom(15f)
-        val chkSound = CheckBox(MyGdxGame.i18NBundle.get("sounds"), MyGdxGame.gameSkin)
+        val chkSound = CheckBox("  ${MyGdxGame.i18NBundle.get("sounds")}", MyGdxGame.gameSkin)
         chkSound.isChecked = MyGdxGame.gamePrefs.getBoolean("soundEnabled", true)
         list.add(chkSound).left().left().padLeft(15f)
 
@@ -84,7 +82,7 @@ class OptionsScreen(private val game: MyGdxGame, private val backScreen: Class<o
 
     private fun createMusicCheckbox(list: Table) {
         list.row().padBottom(15f)
-        val chkMusic = CheckBox(MyGdxGame.i18NBundle.get("music"), MyGdxGame.gameSkin)
+        val chkMusic = CheckBox("  ${MyGdxGame.i18NBundle.get("music")}", MyGdxGame.gameSkin)
         chkMusic.isChecked = MyGdxGame.gamePrefs.getBoolean("musicEnabled", true)
         list.add(chkMusic).left().left().padLeft(15f)
         chkMusic.addListener(object : InputListener() {
@@ -105,8 +103,8 @@ class OptionsScreen(private val game: MyGdxGame, private val backScreen: Class<o
         val label = Label(MyGdxGame.i18NBundle.get("language"), MyGdxGame.gameSkin, "small")
         val languageBox = SelectBox<String>(MyGdxGame.gameSkin)
         val wrapper = Table()
-        MyGdxGame.questEngine.getSupportedLanguages().forEach { languageBox.items.add(it) }
-        MyGdxGame.questEngine.getSupportedLanguages().forEach { languageBox.list.items.add(it) }
+        /*MyGdxGame.questEngine.getSupportedLanguages()*/listOf("ru").forEach { languageBox.items.add(it) }
+        /*MyGdxGame.questEngine.getSupportedLanguages()*/listOf("ru").forEach { languageBox.list.items.add(it) }
 //        languageBox.selectedIndex = 0
         languageBox.selected = MyGdxGame.questEngine.getLanguage()
         wrapper.row().padLeft(3f)
@@ -120,8 +118,16 @@ class OptionsScreen(private val game: MyGdxGame, private val backScreen: Class<o
                 MyGdxGame.questEngine.setLanguage(language)
                 MyGdxGame.gamePrefs.flush()
                 game.initI18NBundle()
-                game.screen = OptionsScreen(game, null)
+                game.screen = OptionsScreen(game)
             }
         })
+    }
+
+    override fun render(delta: Float) {
+        super.render(delta)
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            game.playClick()
+            game.screen = MainMenuScreen(game)
+        }
     }
 }

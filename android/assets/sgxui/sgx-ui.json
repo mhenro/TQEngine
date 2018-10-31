@@ -239,8 +239,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
-		checkboxOn: checkbox-checked-t
-		checkboxOff: checkbox-t
+		checkboxOn: checkbox_checked
+		checkboxOff: checkbox_unchecked
 		checkboxOnDisabled: checkbox-checked-d
 		checkboxOffDisabled: checkbox-d
 		font: new-general-font-20
@@ -293,9 +293,9 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 		fontColor: font
 		overFontColor: font-over
 		disabledFontColor: font-disabled
-		up: button-small
-		down: button-small-pressed
-		over: button-small-over
+		up: button-choice-1
+		down: button-choice-1-pressed
+		over: button-choice-1-over
 		disabled: button-small-disabled
 	}
 	checkbox: {
@@ -405,6 +405,14 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		font: new-general-font-20
 		fontColor: font
 		background: text-field-spinner
+	}
+	title-2: {
+		font: title32-2
+		fontColor: font-over
+	}
+	default-white: {
+		font: new-general-font-20
+		fontColor: font-over
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
