@@ -198,6 +198,15 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 			a: 1
 		}
 	}
+	button-choice-selected: {
+		name: button-emphasis
+		color: {
+			r: 0.0055555105
+			g: 1
+			b: 0
+			a: 1
+		}
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	default: {
@@ -616,12 +625,12 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	}
 	choice-selected: {
 		font: new-general-font-20
-		fontColor: green-font
+		fontColor: font-over
 		overFontColor: font-over
 		disabledFontColor: green-font
-		up: button-emphasis-color
-		down: button-emphasis-color-pressed
-		over: button-emphasis-color-over
+		up: button-choice-selected
+		down: button-choice-selected
+		over: button-choice-selected
 		disabled: button-emphasis-color-disabled
 	}
 	rewind: {

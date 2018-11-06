@@ -13,7 +13,7 @@ import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
 
 class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdListener {
-    private lateinit var adRewardedVideoView: RewardedVideoAd
+    private var adRewardedVideoView: RewardedVideoAd? = null
     private var adVideoListener: AdVideoEventListener? = null
     private var isAdVideoLoaded = false
 
@@ -23,10 +23,6 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        /* initialize Google ads */
-        MobileAds.initialize(this, getString(R.string.admob_app_id))
-        setupRewarded()
 
         val config = AndroidApplicationConfiguration()
         val game = MyGdxGame(this)
@@ -57,13 +53,22 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
     }
 
     override fun loadRewardedVideoAd() {
-        adRewardedVideoView.loadAd(getString(R.string.ad_unit_id_test), AdRequest.Builder().build())
+        isAdVideoLoaded = false
+        adRewardedVideoView?.loadAd(getString(R.string.ad_unit_id_test), AdRequest.Builder().build())
+    }
+
+    override fun prepareAds() {
+        /* initialize Google ads */
+        MobileAds.initialize(this, getString(R.string.admob_app_id))
+        setupRewarded()
     }
 
     private fun setupRewarded() {
         adRewardedVideoView = MobileAds.getRewardedVideoAdInstance(this)
-        adRewardedVideoView.rewardedVideoAdListener = this
-        loadRewardedVideoAd()
+        runOnUiThread {
+            adRewardedVideoView?.rewardedVideoAdListener = this
+            loadRewardedVideoAd()
+        }
     }
 
     override fun setVideoEventListener(listener: AdVideoEventListener) {
@@ -71,6 +76,7 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
     }
 
     override fun onRewarded(item: RewardItem) {
+        isAdVideoLoaded = false
         adVideoListener?.onRewardedEvent(item.type, item.amount)
     }
 
@@ -100,7 +106,7 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
             return true
         }
         runOnUiThread {
-            if (!adRewardedVideoView.isLoaded) {
+            if (adRewardedVideoView?.isLoaded == false) {
                 loadRewardedVideoAd()
             }
         }
@@ -109,8 +115,8 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
 
     override fun showRewardedVideoAd() {
         runOnUiThread {
-            if (adRewardedVideoView.isLoaded) {
-                adRewardedVideoView.show()
+            if (adRewardedVideoView?.isLoaded == true) {
+                adRewardedVideoView?.show()
             } else {
                 loadRewardedVideoAd()
             }
@@ -119,16 +125,16 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
 
     override fun onPause() {
         super.onPause()
-        adRewardedVideoView.pause(this)
+        adRewardedVideoView?.pause(this)
     }
 
     override fun onResume() {
         super.onResume()
-        adRewardedVideoView.resume(this)
+        adRewardedVideoView?.resume(this)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        adRewardedVideoView.destroy(this)
+        adRewardedVideoView?.destroy(this)
     }
 }

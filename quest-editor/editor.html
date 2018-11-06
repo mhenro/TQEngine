@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+<head>
+    <title>Quest editor</title>
+
+    <script type="text/javascript" src="vis.js"></script>
+    <link href="vis-network.min.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+    #mynetwork {
+      width: 50%;//1024px;
+      height: 768px;
+      border: 1px solid lightgray;
+      float: left;
+    }
+    code {
+      font-size: 14px;
+      background: #dddddd;
+    }
+    p {
+      max-width: 600px;
+    }
+    .indented {
+      margin-left: 30px;
+    }
+    .sep {
+      height: 1px;
+      width: 35%;
+      margin-left: 40px;
+      background-color: #dddddd;
+    }
+    .searchField {
+        margin-left: 20px;
+        width: 40%;
+        clear: both;
+    }
+    #generateview {
+        text-align: center
+    }
+  </style>
+
+</head>
+
+<body>
+<div id="mynetwork"></div>
+<div>
+    <textarea  name="questData" rows="50" id="questData" class="searchField"></textarea>
+</div>
+<div id="generateview">
+    <button onclick="generateView()">Generate view</button>
+</div>
+<script type="text/javascript">
+
+const generateView = () => {
+    let value = document.getElementById("questData").value
+    if (value.length === 0) return
+    let quest = JSON.parse(value)
+
+    const generatePopup = (node) => {
+        let inventory = typeof node.newInventory !== "undefined" ? node.newInventory : []
+        let duration = node.type === 0 || node.type === 2 ? node.additionalParams.duration : "n/a"
+
+        return "<table>" +
+                    "<tr>" +
+                        "<th>Param</th>" +
+                        "<th>Value</th>" +
+                    "</tr>" +
+                    "<tr>" +
+                        "<td>ID</td>" +
+                        "<td>" + node.id + "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                        "<td>New inventory</td>" +
+                        "<td>" + inventory.map(item => quest.inventory.find(element => element.id === item).name.locale["ru"]) + "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                        "<td>Duration</td>" +
+                        "<td>" + duration + "</td>" +
+                    "</tr>" +
+                "</table>"
+    }
+
+    let newNodes = []
+    quest.gameNodes.forEach(node => {
+        let text = "",
+            color = "#422C95"
+        /* color*/
+        if (node.startNode || node.endNode) {
+            color = "orange"
+        } else if (node.type === 0 && node.additionalParams.infoMessage) {
+            color = "green"
+        }
+
+        /* text */
+        if (node.type === 0) {
+            text = node.additionalParams.message.locale["ru"]
+        } else if (node.type === 1) {
+            text = "Choice node"
+        } else if (node.type === 2) {
+            text = "Image node (" + node.additionalParams.location + ")"
+        }
+        newNodes.push({
+            id: node.id,
+            label: text,
+            color: color,
+            font: {
+                color: "white",
+                size: 20
+            },
+            payload: node,
+            title: generatePopup(node)
+        })
+    })
+
+    let newEdges = []
+    quest.gameNodes.forEach(node => {
+        let label = ""
+        if (node.type === 1) {
+            node.additionalParams.choices.forEach(choice => {
+                label = choice.text.locale["ru"]
+                newEdges.push({
+                    from: node.id,
+                    to: choice.nextNode,
+                    label: label
+                })
+            })
+            label
+        } else {
+            newEdges.push({
+                from: node.id,
+                to: node.nextNode,
+                label: ""   //node.additionalParams.message.locale["ru"]
+            })
+        }
+    })
+
+      var container = document.getElementById('mynetwork');
+      var data = {
+        nodes: newNodes,
+        edges: newEdges
+      };
+      var options = {
+        layout: {
+            hierarchical: {
+                direction: "UD",
+                nodeSpacing: 320,
+                sortMethod: "directed"
+            }
+        },
+        edges: {
+            arrows: 'to',
+          font: {
+            size: 20
+          }
+        },
+        nodes: {
+          shape: 'box',
+          margin: 10,
+          widthConstraint: {
+            maximum: 200
+          }
+        },
+        physics: {
+          enabled: false
+        },
+        configure: {
+              filter: function (option, path) {
+                  if (path.indexOf('hierarchical') !== -1) {
+                      return true;
+                  }
+                  return false;
+              },
+              showButton:false
+            }
+      };
+      var network = new vis.Network(container, data, options);
+  }
+</script>
+
+</body>
+</html>

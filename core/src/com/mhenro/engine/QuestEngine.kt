@@ -27,7 +27,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
                                       private var completedTime: DateTime = DateTime.now(),
                                       private var contentList: ScrollPane = ScrollPane(null),
                                       private var respawnNode: QuestGameNode? = null,
-                                      private var completedChapters: MutableSet<Int> = HashSet()) {
+                                      private var completedChapters: MutableSet<Int> = HashSet(),
+                                      private var selectedChoices: MutableMap<Int, Int> = HashMap()) {
     companion object {
         const val DEBUG_MODE = false
         const val ENGINE_VERSION = 1
@@ -192,7 +193,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
     private fun createAnswer(node: QuestGameNode, history: Boolean = false) {
         val choicePanel = Table()
         node.additionalParams.choices!!.forEach {
-            val btnChoice = TextButton("\n${it.text.locale[getLanguage()]}\n", MyGdxGame.gameSkin, "choice")
+            val selected = selectedChoices[node.id] == it.nextNode && history
+            val btnChoice = TextButton("\n${it.text.locale[getLanguage()]}\n", MyGdxGame.gameSkin, if (selected) "choice-selected" else "choice")
             btnChoice.label.setWrap(true)
             btnChoice.labelCell.padTop(5f).padBottom(5f)
             choicePanel.add(btnChoice).fill().expandX()
@@ -213,7 +215,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
                             return
                         }
                         game.playClick()
-                        btnChoice.isDisabled = true
+                        btnChoice.style = MyGdxGame.gameSkin.get("choice-selected", TextButton.TextButtonStyle::class.java)
+                        selectedChoices[node.id] = it.nextNode
 
                         setCurrentNode(it.nextNode)
                         completedTime = DateTime.now().plusMillis(node.additionalParams.duration ?: 100)
@@ -394,6 +397,18 @@ class QuestEngine private constructor(private val questData: QuestGame,
         return completedChapters
     }
 
+    fun getSelectedChoices(): Map<Int, Int> {
+        return selectedChoices
+    }
+
+    fun clearSelectedChoices() {
+        selectedChoices.clear()
+    }
+
+    fun addToSelectedChoices(choices: Map<Int, Int>) {
+        selectedChoices.putAll(choices)
+    }
+
     fun getPrevNode(): Int? {
         if (history.isNotEmpty()) {
             return history.last()
@@ -410,6 +425,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
         clearHistory()
         clearInventory()
         clearCompletedChapters()
+        clearSelectedChoices()
         setCurrentNode(getStartNode().id)
     }
 

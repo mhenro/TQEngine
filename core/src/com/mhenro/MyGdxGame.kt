@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.I18NBundle
 import com.mhenro.engine.QuestEngine
+import com.mhenro.screens.GameScreen
 import com.mhenro.screens.SplashScreen
 import com.mhenro.utils.Toast
 import org.joda.time.DateTime
@@ -32,13 +33,14 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
         lateinit var soundClick: Sound
         lateinit var messageReceived: Sound
         lateinit var music: Music
+        lateinit var menuMusic: Music
         lateinit var gamePrefs: Preferences
         lateinit var i18NBundle: I18NBundle
     }
 
     override fun create() {
         gameSkin = Skin(Gdx.files.internal("sgxui/sgx-ui.json"))
-//        this.setScreen(SplashScreen(this))
+        this.setScreen(SplashScreen(this))
 
         gamePrefs = Gdx.app.getPreferences("settings")
 
@@ -53,13 +55,12 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
         }
 
         questEngine = QuestEngine.getEngine(this, completedTime)
-
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/main_theme.mp3"))
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/menu_theme.mp3"))
         soundClick = Gdx.audio.newSound(Gdx.files.internal("sounds/click.mp3"))
-        messageReceived = Gdx.audio.newSound(Gdx.files.internal("sounds/notification-2.mp3"))
+        messageReceived = Gdx.audio.newSound(Gdx.files.internal("sounds/notification.mp3"))
         loadLanguage()
         initI18NBundle()
-        playMusic()
 
         /* load previously saved data */
         if (gamePrefs.getString("history").isNotEmpty()) {
@@ -74,14 +75,20 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
             val completedChapters = gamePrefs.getString("completedChapters").split(",").map { it.trim().toInt() }.toSet()
             MyGdxGame.questEngine.addToCompletedChapters(completedChapters)
         }
+        if (gamePrefs.getString("selectedChoices").isNotEmpty()) {
+            val selectedChoices = HashMap<Int, Int>()
+            gamePrefs.getString("selectedChoices").split(",").forEach {
+                val key = it.split("-")[0].trim().toInt()
+                val value = it.split("-")[1].trim().toInt()
+                selectedChoices[key] = value
+                MyGdxGame.questEngine.addToSelectedChoices(selectedChoices)
+            }
+        }
 
         /* create toast factory */
         toastFactory = Toast.ToastFactory.Builder()
                 .font(MyGdxGame.gameSkin.getFont("new-general-font-20"))
                 .build()
-
-//        this.setScreen(MainMenuScreen(this))
-        this.setScreen(SplashScreen(this))
     }
 
     override fun onRewardedEvent(type: String, amount: Int) {
@@ -110,11 +117,29 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
     }
 
     fun playMusic() {
+        menuMusic.stop()
+        if (music.isPlaying) {
+            return
+        }
         if (gamePrefs.getBoolean("musicEnabled", true)) {
+            music.position = 9f
             music.play()
             music.isLooping = true
         } else {
-            music.stop()
+            music.pause()
+        }
+    }
+
+    fun playMenuMusic() {
+        music.pause()
+        if (menuMusic.isPlaying) {
+            return
+        }
+        if (gamePrefs.getBoolean("musicEnabled", true)) {
+            menuMusic.play()
+            menuMusic.isLooping = true
+        } else {
+            menuMusic.stop()
         }
     }
 
@@ -167,6 +192,7 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
         MyGdxGame.gamePrefs.putString("inventory", MyGdxGame.questEngine.getPlayerInventoryItemIds().joinToString())
         MyGdxGame.gamePrefs.putString("completedTime", MyGdxGame.questEngine.getCompletedTime())
         MyGdxGame.gamePrefs.putString("completedChapters", MyGdxGame.questEngine.getCompletedChapters().joinToString())
+        MyGdxGame.gamePrefs.putString("selectedChoices", MyGdxGame.questEngine.getSelectedChoices().map { (k, v) -> "$k-$v" }.joinToString())
         MyGdxGame.gamePrefs.flush()
     }
 
@@ -175,6 +201,7 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
     }
 
     override fun dispose() {
-
+        music.dispose()
+        menuMusic.dispose()
     }
 }

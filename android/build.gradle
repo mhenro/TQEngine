@@ -20,7 +20,7 @@ android {
         applicationId "com.mhenro"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 4
+        versionCode 7
         versionName "1.0"
     }
     buildTypes {

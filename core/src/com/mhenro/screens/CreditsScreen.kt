@@ -18,15 +18,19 @@ class CreditsScreen(private val game: MyGdxGame) : AbstractGameScreen() {
     }
 
     private fun createLayout() {
+        val splashImage = Image(MyGdxGame.gameSkin, "credits-screen")
+        splashImage.setFillParent(true)
+        stage.addActor(splashImage)
+
         stage.addActor(createTitle())
         stage.addActor(createCloseButton())
 
         val container = VerticalGroup()
-        val labelName = Label("\n\n\n\n${MyGdxGame.questEngine.getQuestName()}\n\n\n\n", MyGdxGame.gameSkin)
-        val labelCredits = Label("${MyGdxGame.i18NBundle.get("authors")}\n\n", MyGdxGame.gameSkin)
-        val labelAuthor1 = Label("${MyGdxGame.i18NBundle.get("author1")}\n", MyGdxGame.gameSkin)
-        val labelAuthor2 = Label("${MyGdxGame.i18NBundle.get("author2")}\n", MyGdxGame.gameSkin)
-        val labelAuthor3 = Label("${MyGdxGame.i18NBundle.get("author3")}\n\n\n\n", MyGdxGame.gameSkin)
+        val labelName = Label("\n\n\n\n${MyGdxGame.questEngine.getQuestName()}\n\n\n\n", MyGdxGame.gameSkin, "default-white")
+        val labelCredits = Label("${MyGdxGame.i18NBundle.get("authors")}\n\n", MyGdxGame.gameSkin, "default-white")
+        val labelAuthor1 = Label("${MyGdxGame.i18NBundle.get("author1")}\n", MyGdxGame.gameSkin, "default-white")
+        val labelAuthor2 = Label("${MyGdxGame.i18NBundle.get("author2")}\n", MyGdxGame.gameSkin, "default-white")
+        val labelAuthor3 = Label("${MyGdxGame.i18NBundle.get("author3")}\n\n\n\n", MyGdxGame.gameSkin, "default-white")
         container.addActor(labelName)
         container.addActor(labelCredits)
         container.addActor(labelAuthor1)

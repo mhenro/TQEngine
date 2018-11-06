@@ -15,6 +15,7 @@ class GameScreen(private val game: MyGdxGame,
 
     init {
         createLayout()
+        game.playMusic()
         MyGdxGame.questEngine.startQuest(contentList)
     }
 

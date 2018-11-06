@@ -101,6 +101,8 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
                     game.backToSavepoint = true
                     game.googleServices.showRewardedVideoAd()
                     game.screen = GameScreen(game)
+                } else {
+                    game.showLongToast(MyGdxGame.i18NBundle.get("respawn-no-internet"))
                 }
             }
 

@@ -89,7 +89,7 @@ class OptionsScreen(private val game: MyGdxGame): AbstractGameScreen() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 MyGdxGame.gamePrefs.putBoolean("musicEnabled", (event.listenerActor as CheckBox).isChecked)
                 MyGdxGame.gamePrefs.flush()
-                game.playMusic()
+                game.playMenuMusic()
             }
 
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {

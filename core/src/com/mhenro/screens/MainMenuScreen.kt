@@ -13,6 +13,7 @@ class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
 
     init {
         createLayout()
+        game.playMenuMusic()
     }
 
     private fun createLayout() {
