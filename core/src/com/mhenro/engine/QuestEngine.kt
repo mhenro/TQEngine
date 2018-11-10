@@ -264,7 +264,13 @@ class QuestEngine private constructor(private val questData: QuestGame,
                 if (!history) {
                     setCurrentNode(node.nextNode!!)
                     completedTime = DateTime.now().plusMillis(duration)
-                    game.messageReceived()
+                    if (node.ringStart) {
+                        game.ringStart()
+                    } else if (node.ringEnd) {
+                        game.ringEnd()
+                    } else {
+                        game.messageReceived()
+                    }
                 }
             }
             1 -> {

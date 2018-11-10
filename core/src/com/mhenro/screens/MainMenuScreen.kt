@@ -28,8 +28,8 @@ class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
         //wrapper.row().padLeft(5f).padRight(5f)
         wrapper.add(createCreditsButton()).fill().expand()
         wrapper.row().padLeft(5f).padRight(5f)
-        //wrapper.add(createSocialFacebookButton()).fill().expand()
-        //wrapper.row().padLeft(5f).padRight(5f).padBottom(5f)
+        wrapper.add(createSocialFacebookButton()).fill().expand()
+        wrapper.row().padLeft(5f).padRight(5f).padBottom(5f)
         wrapper.layout()
     }
 
@@ -108,9 +108,9 @@ class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()
                 if (MyGdxGame.questEngine.getLanguage() == "ru") {
-                    Gdx.net.openURI("https://vk.com")
+                    Gdx.net.openURI("https://vk.com/stayalivegroup")
                 } else {
-                    Gdx.net.openURI("https://facebook.com")
+                    Gdx.net.openURI("https://facebook.com/stayalivegroup")
                 }
             }
 

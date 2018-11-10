@@ -2674,6 +2674,23 @@ atlasData: {
 			minHeight: 0
 			customized: false
 		}
+		{
+			file: C:/Users/mhenr/Documents/08 Java/TextQuestEngine/logo/company.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: company
+			tiled: false
+			minWidth: 0
+			minHeight: 0
+			customized: false
+		}
 	]
 }
 jsonData: {

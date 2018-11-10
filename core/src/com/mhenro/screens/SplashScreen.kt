@@ -16,7 +16,8 @@ class SplashScreen(private val game: MyGdxGame) : AbstractGameScreen() {
         splashImage.addAction(Actions.sequence(Actions.fadeOut(0.00001f), Actions.fadeIn(1f), Actions.fadeIn(1f), Actions.fadeOut(1f), Actions.run(onSplashFinishedRunnable)))
         stage.addActor(splashImage)
         createSplashTitle()
-        createAuthorLabel()
+//        createAuthorLabel()
+        createCompanyLogo()
     }
 
     private val onSplashFinishedRunnable = {
@@ -40,5 +41,12 @@ class SplashScreen(private val game: MyGdxGame) : AbstractGameScreen() {
         label.setPosition(stage.width - label.width - 15, label.height)
         label.addAction(Actions.sequence(Actions.fadeOut(0.00001f), Actions.fadeIn(1f), Actions.fadeIn(1f), Actions.fadeOut(1f)))
         stage.addActor(label)
+    }
+
+    private fun createCompanyLogo() {
+        val logo = Image(MyGdxGame.gameSkin, "company")
+        logo.setPosition(stage.width - logo.width - 15, 0f)
+        logo.addAction(Actions.sequence(Actions.fadeOut(0.00001f), Actions.fadeIn(1f), Actions.fadeIn(1f), Actions.fadeOut(1f)))
+        stage.addActor(logo)
     }
 }

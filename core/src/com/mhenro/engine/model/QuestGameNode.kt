@@ -9,5 +9,7 @@ data class QuestGameNode(
         var newInventory: List<Int> = emptyList(),
         var removeInventory: List<Int> = emptyList(),
         var respawnNode: Boolean = false,
+        var ringStart: Boolean = false,
+        var ringEnd: Boolean = false,
         var additionalParams: QuestNodeParams = QuestNodeParams()
 )

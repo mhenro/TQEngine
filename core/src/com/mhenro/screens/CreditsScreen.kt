@@ -23,6 +23,7 @@ class CreditsScreen(private val game: MyGdxGame) : AbstractGameScreen() {
         stage.addActor(splashImage)
 
         stage.addActor(createTitle())
+        stage.addActor(createCompanyLogo())
         stage.addActor(createCloseButton())
 
         val container = VerticalGroup()
@@ -49,6 +50,12 @@ class CreditsScreen(private val game: MyGdxGame) : AbstractGameScreen() {
         title.setAlignment(Align.center)
         title.setPosition(stage.width/2 - title.width/2, stage.height - title.height - 15)
         return title
+    }
+
+    private fun createCompanyLogo(): Actor {
+        val logo = Image(MyGdxGame.gameSkin, "company")
+        logo.setPosition(stage.width - logo.width - 15, 0f)
+        return logo
     }
 
     private fun createCloseButton(): Actor {

@@ -32,6 +32,8 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
         lateinit var gameSkin: Skin
         lateinit var soundClick: Sound
         lateinit var messageReceived: Sound
+        lateinit var ringStart: Sound
+        lateinit var ringEnd: Sound
         lateinit var music: Music
         lateinit var menuMusic: Music
         lateinit var gamePrefs: Preferences
@@ -59,6 +61,8 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
         menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/menu_theme.mp3"))
         soundClick = Gdx.audio.newSound(Gdx.files.internal("sounds/click.mp3"))
         messageReceived = Gdx.audio.newSound(Gdx.files.internal("sounds/notification.mp3"))
+        ringStart = Gdx.audio.newSound(Gdx.files.internal("sounds/ring-start.mp3"))
+        ringEnd = Gdx.audio.newSound(Gdx.files.internal("sounds/ring-end.mp3"))
         loadLanguage()
         initI18NBundle()
 
@@ -156,6 +160,22 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
             messageReceived.play()
         } else {
             messageReceived.stop()
+        }
+    }
+
+    fun ringStart() {
+        if (gamePrefs.getBoolean("soundEnabled", true)) {
+            ringStart.play()
+        } else {
+            ringStart.stop()
+        }
+    }
+
+    fun ringEnd() {
+        if (gamePrefs.getBoolean("soundEnabled", true)) {
+            ringEnd.play()
+        } else {
+            ringEnd.stop()
         }
     }
 
