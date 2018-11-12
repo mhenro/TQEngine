@@ -130,3 +130,4 @@ android/release
 *.der
 *.jks
 quest.json
+google-services.json

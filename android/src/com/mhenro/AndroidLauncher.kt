@@ -54,7 +54,7 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
 
     override fun loadRewardedVideoAd() {
         isAdVideoLoaded = false
-        adRewardedVideoView?.loadAd(getString(R.string.ad_unit_id_test), AdRequest.Builder().build())
+        adRewardedVideoView?.loadAd(getString(R.string.ad_unit_id), AdRequest.Builder().build())
     }
 
     override fun prepareAds() {
