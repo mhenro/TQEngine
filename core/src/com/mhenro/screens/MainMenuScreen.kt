@@ -6,9 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton
 import com.mhenro.MyGdxGame
-import java.lang.Exception
 
-class MainMenuScreen(private val game: MyGdxGame): AbstractGameScreen() {
+class MainMenuScreen(private val game: MyGdxGame) : AbstractGameScreen() {
     private val tag = MainMenuScreen::class.java.simpleName
 
     init {

@@ -8,7 +8,6 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.I18NBundle
 import com.mhenro.engine.QuestEngine
-import com.mhenro.screens.GameScreen
 import com.mhenro.screens.SplashScreen
 import com.mhenro.utils.Toast
 import org.joda.time.DateTime
@@ -69,15 +68,15 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
         /* load previously saved data */
         if (gamePrefs.getString("history").isNotEmpty()) {
             val history = gamePrefs.getString("history").split(",").map { it.trim().toInt() }.toList()
-            MyGdxGame.questEngine.addToHistory(history)
+            questEngine.addToHistory(history)
         }
         if (gamePrefs.getString("inventory").isNotEmpty()) {
             val inventory = gamePrefs.getString("inventory").split(",").map { it.trim().toInt() }.toSet()
-            MyGdxGame.questEngine.addToInventory(inventory)
+            questEngine.addToInventory(inventory)
         }
         if (gamePrefs.getString("completedChapters").isNotEmpty()) {
             val completedChapters = gamePrefs.getString("completedChapters").split(",").map { it.trim().toInt() }.toSet()
-            MyGdxGame.questEngine.addToCompletedChapters(completedChapters)
+            questEngine.addToCompletedChapters(completedChapters)
         }
         if (gamePrefs.getString("selectedChoices").isNotEmpty()) {
             val selectedChoices = HashMap<Int, Int>()
@@ -85,13 +84,13 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
                 val key = it.split("-")[0].trim().toInt()
                 val value = it.split("-")[1].trim().toInt()
                 selectedChoices[key] = value
-                MyGdxGame.questEngine.addToSelectedChoices(selectedChoices)
+                questEngine.addToSelectedChoices(selectedChoices)
             }
         }
 
         /* create toast factory */
         toastFactory = Toast.ToastFactory.Builder()
-                .font(MyGdxGame.gameSkin.getFont("new-general-font-20"))
+                .font(gameSkin.getFont("new-general-font-20"))
                 .build()
     }
 
@@ -110,8 +109,20 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
     override fun onRewardedVideoAdClosedEvent() {}
 
     private fun loadLanguage() {
-        val language = "ru" //TODO: gamePrefs.getString("selectedLanguage", "en")
-        MyGdxGame.questEngine.setLanguage(language)
+        var defaultLanguage = gamePrefs.getString("selectedLanguage")
+        try {
+            if (defaultLanguage.isEmpty()) {
+                defaultLanguage = java.util.Locale.getDefault().toString().split("_")[0]
+                gamePrefs.putString("selectedLanguage", defaultLanguage)
+                gamePrefs.flush()
+            }
+        } catch (e: Exception) {
+            defaultLanguage = "en"
+            gamePrefs.putString("selectedLanguage", defaultLanguage)
+            gamePrefs.flush()
+        }
+        val language = defaultLanguage
+        questEngine.setLanguage(language)
     }
 
     fun initI18NBundle() {
@@ -200,20 +211,15 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
                 break // first toast still active, break the loop
             }
         }
-
-//
-//        batch.begin()
-//        batch.draw(img, 0f, 0f)
-//        batch.end()
     }
 
     override fun pause() {
-        MyGdxGame.gamePrefs.putString("history", MyGdxGame.questEngine.getHistory().joinToString())
-        MyGdxGame.gamePrefs.putString("inventory", MyGdxGame.questEngine.getPlayerInventoryItemIds().joinToString())
-        MyGdxGame.gamePrefs.putString("completedTime", MyGdxGame.questEngine.getCompletedTime())
-        MyGdxGame.gamePrefs.putString("completedChapters", MyGdxGame.questEngine.getCompletedChapters().joinToString())
-        MyGdxGame.gamePrefs.putString("selectedChoices", MyGdxGame.questEngine.getSelectedChoices().map { (k, v) -> "$k-$v" }.joinToString())
-        MyGdxGame.gamePrefs.flush()
+        gamePrefs.putString("history", questEngine.getHistory().joinToString())
+        gamePrefs.putString("inventory", questEngine.getPlayerInventoryItemIds().joinToString())
+        gamePrefs.putString("completedTime", questEngine.getCompletedTime())
+        gamePrefs.putString("completedChapters", questEngine.getCompletedChapters().joinToString())
+        gamePrefs.putString("selectedChoices", questEngine.getSelectedChoices().map { (k, v) -> "$k-$v" }.joinToString())
+        gamePrefs.flush()
     }
 
     override fun resume() {

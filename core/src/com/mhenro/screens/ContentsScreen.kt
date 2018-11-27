@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
 import com.mhenro.engine.model.QuestChapter
 
-class ContentsScreen(private val game: MyGdxGame): AbstractGameScreen() {
+class ContentsScreen(private val game: MyGdxGame) : AbstractGameScreen() {
     private val tag = ContentsScreen::class.java.simpleName
 
     init {

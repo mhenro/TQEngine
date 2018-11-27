@@ -12,7 +12,7 @@ import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
 
-class AlarmReceiver: BroadcastReceiver() {
+class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, receivedIntent: Intent) {
         val title = receivedIntent.getStringExtra("title")
         val text = receivedIntent.getStringExtra("text")

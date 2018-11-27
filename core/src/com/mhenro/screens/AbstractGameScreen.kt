@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.utils.viewport.ExtendViewport
 
-abstract class AbstractGameScreen: Screen {
+abstract class AbstractGameScreen : Screen {
     protected val stage = Stage(ExtendViewport(480f, 800f))
     protected val wrapper = Table()
 
@@ -16,30 +16,30 @@ abstract class AbstractGameScreen: Screen {
         stage.addActor(wrapper)
     }
 
-     override fun hide() {}
+    override fun hide() {}
 
-     override fun show() {
-         Gdx.input.inputProcessor = stage
-         Gdx.input.isCatchBackKey = true
-         Gdx.input.isCatchMenuKey = true
-     }
+    override fun show() {
+        Gdx.input.inputProcessor = stage
+        Gdx.input.isCatchBackKey = true
+        Gdx.input.isCatchMenuKey = true
+    }
 
-     override fun render(delta: Float) {
-         Gdx.gl.glClearColor(23f / 255, 23f / 255, 38f / 255, 1f)
-         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-         stage.act()
-         stage.draw()
-     }
+    override fun render(delta: Float) {
+        Gdx.gl.glClearColor(23f / 255, 23f / 255, 38f / 255, 1f)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        stage.act()
+        stage.draw()
+    }
 
-     override fun pause() {}
+    override fun pause() {}
 
-     override fun resume() {}
+    override fun resume() {}
 
-     override fun resize(width: Int, height: Int) {
-         stage.viewport.update(width, height, true)
-     }
+    override fun resize(width: Int, height: Int) {
+        stage.viewport.update(width, height, true)
+    }
 
-     override fun dispose() {
-         stage.dispose()
-     }
- }
+    override fun dispose() {
+        stage.dispose()
+    }
+}

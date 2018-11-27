@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
 import com.mhenro.engine.model.QuestGameNode
 
-class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGameNode): AbstractGameScreen() {
+class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGameNode) : AbstractGameScreen() {
     private val tag = GameOverScreen::class.java.simpleName
 
     init {

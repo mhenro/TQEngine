@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
 import com.mhenro.engine.model.QuestInventoryItem
 
-class InventoryScreen(private val game: MyGdxGame): AbstractGameScreen() {
+class InventoryScreen(private val game: MyGdxGame) : AbstractGameScreen() {
     private val tag = InventoryScreen::class.java.simpleName
     private lateinit var tooltipLabel: Label
 

@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener
 import com.badlogic.gdx.utils.Align
 import com.mhenro.MyGdxGame
 
-class OptionsScreen(private val game: MyGdxGame): AbstractGameScreen() {
+class OptionsScreen(private val game: MyGdxGame) : AbstractGameScreen() {
     private val tag = OptionsScreen::class.java.simpleName
 
     init {
@@ -103,9 +103,9 @@ class OptionsScreen(private val game: MyGdxGame): AbstractGameScreen() {
         val label = Label(MyGdxGame.i18NBundle.get("language"), MyGdxGame.gameSkin, "small")
         val languageBox = SelectBox<String>(MyGdxGame.gameSkin)
         val wrapper = Table()
-        /*MyGdxGame.questEngine.getSupportedLanguages()*/listOf("ru").forEach { languageBox.items.add(it) }
-        /*MyGdxGame.questEngine.getSupportedLanguages()*/listOf("ru").forEach { languageBox.list.items.add(it) }
-//        languageBox.selectedIndex = 0
+        MyGdxGame.questEngine.getSupportedLanguages().forEach { languageBox.items.add(it) }
+        MyGdxGame.questEngine.getSupportedLanguages().forEach { languageBox.list.items.add(it) }
+        languageBox.selectedIndex = 0
         languageBox.selected = MyGdxGame.questEngine.getLanguage()
         wrapper.row().padLeft(3f)
         wrapper.add(label)

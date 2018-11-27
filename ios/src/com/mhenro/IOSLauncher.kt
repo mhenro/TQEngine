@@ -22,6 +22,8 @@ class IOSLauncher: IOSApplication.Delegate(), GoogleServices {
     override fun showRewardedVideoAd() {}
 
     override fun setVideoEventListener(listener: AdVideoEventListener) {}
+
+    override fun prepareAds() {}
 }
 
 fun main(argv: Array<String>) {

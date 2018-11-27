@@ -29,7 +29,7 @@ class SplashScreen(private val game: MyGdxGame) : AbstractGameScreen() {
         val label = Label(/*MyGdxGame.i18NBundle.get("game-title")*/"Stay Alive", MyGdxGame.gameSkin, "title-2")
         label.setAlignment(Align.center)
         label.setWrap(true)
-        label.setPosition(stage.width/2 - label.width/2, stage.height - label.height - 155)
+        label.setPosition(stage.width / 2 - label.width / 2, stage.height - label.height - 155)
         label.addAction(Actions.sequence(Actions.fadeOut(0.00001f), Actions.fadeIn(1f), Actions.fadeIn(1f), Actions.fadeOut(1f)))
         stage.addActor(label)
     }

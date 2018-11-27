@@ -48,7 +48,7 @@ class CreditsScreen(private val game: MyGdxGame) : AbstractGameScreen() {
     private fun createTitle(): Actor {
         val title = Label("\n${MyGdxGame.i18NBundle.get("credits")}\n", MyGdxGame.gameSkin, "title")
         title.setAlignment(Align.center)
-        title.setPosition(stage.width/2 - title.width/2, stage.height - title.height - 15)
+        title.setPosition(stage.width / 2 - title.width / 2, stage.height - title.height - 15)
         return title
     }
 

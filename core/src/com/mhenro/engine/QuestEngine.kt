@@ -85,7 +85,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
         }
         val wrongNode = questData.gameNodes.find { it.startNode && it.endNode }
         wrongNode?.let { throw QuestParserException("One of the nodes has Start and End markers") }
-        questData.gameNodes.find { it.startNode } ?: throw QuestParserException("Start node is not found")
+        questData.gameNodes.find { it.startNode }
+                ?: throw QuestParserException("Start node is not found")
         if (questData.gameNodes.filter { it.startNode }.count() > 1) {
             throw QuestParserException("Quest must has only one Start node")
         }
@@ -105,7 +106,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
                     if (it.nextNode == null) {
                         throw QuestParserException("Node with type 0 (simple message) must has a nextNode property")
                     }
-                    params.notification?.let {notification ->
+                    params.notification?.let { notification ->
                         questData.supportedLanguages.forEach {
                             if (notification.locale[it] == null || notification.locale[it]!!.isBlank()) {
                                 throw QuestParserException("If notification property is presented it should have not empty text for all supported languages")
@@ -219,7 +220,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
                         selectedChoices[node.id] = it.nextNode
 
                         setCurrentNode(it.nextNode)
-                        completedTime = DateTime.now().plusMillis(node.additionalParams.duration ?: 100)
+                        completedTime = DateTime.now().plusMillis(node.additionalParams.duration
+                                ?: 100)
                     }
 
                     override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
@@ -490,7 +492,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
 
         /* remove chapters after the current chapter */
         val newContents = HashSet<Int>()
-        val currentChapter = questData.contents.findLast { it.startFromNode == nodeId }?.id ?: Integer.MAX_VALUE
+        val currentChapter = questData.contents.findLast { it.startFromNode == nodeId }?.id
+                ?: Integer.MAX_VALUE
         completedChapters.forEach {
             if (currentChapter > it) {
                 newContents.add(it)

@@ -9,7 +9,7 @@ import android.os.SystemClock
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-class AndroidNotificationImpl(private val gameActivity: Activity): NotificationHandler {
+class AndroidNotificationImpl(private val gameActivity: Activity) : NotificationHandler {
     override fun showNotification(title: String, text: String, dateTime: DateTime) {
         val format = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss")
         scheduleNotifications(gameActivity, title, text, format.print(dateTime))
