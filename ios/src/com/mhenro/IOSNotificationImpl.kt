@@ -1,15 +1,13 @@
 package com.mhenro
 
 import org.joda.time.DateTime
-import org.robovm.apple.uikit.UIApplication
-import org.robovm.apple.uikit.UIUserNotificationSettings
-import org.robovm.apple.uikit.UIUserNotificationType
-import org.robovm.apple.foundation.NSTimeZone
-import org.robovm.apple.uikit.UILocalNotification
 import org.robovm.apple.foundation.NSDate
 import org.robovm.apple.foundation.NSOperationQueue
+import org.robovm.apple.foundation.NSTimeZone
+import org.robovm.apple.uikit.UIApplication
+import org.robovm.apple.uikit.UILocalNotification
 
-class IOSNotificationImpl: NotificationHandler {
+class IOSNotificationImpl : NotificationHandler {
     init {
 //        //Registers notifications, it will ask user if ok to receive notifications from this app, if user selects no then no notifications will be received
 //        UIApplication.getSharedApplication().registerUserNotificationSettings(UIUserNotificationSettings.create(UIUserNotificationType.Alert, null));
@@ -32,7 +30,8 @@ class IOSNotificationImpl: NotificationHandler {
             localNotification.alertBody = title
             localNotification.alertAction = text
             localNotification.timeZone = NSTimeZone.getDefaultTimeZone()
-            localNotification.applicationIconBadgeNumber = UIApplication.getSharedApplication().applicationIconBadgeNumber + 1
+            localNotification.applicationIconBadgeNumber = UIApplication.getSharedApplication().applicationIconBadgeNumber +
+                    1
 
             UIApplication.getSharedApplication().scheduleLocalNotification(localNotification)
         }

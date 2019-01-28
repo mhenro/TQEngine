@@ -32,13 +32,18 @@ class AlarmReceiver : BroadcastReceiver() {
         notificationManager.notify(AndroidLauncher.ALARM_TYPE_ELAPSE, notification)
     }
 
-    private fun buildLocalNotification(context: Context, pendingIntent: PendingIntent, title: String, text: String): Notification {
+    private fun buildLocalNotification(
+        context: Context,
+        pendingIntent: PendingIntent,
+        title: String,
+        text: String
+    ): Notification {
         return NotificationCompat.Builder(context)
-                .setContentIntent(pendingIntent)
-                .setSmallIcon(com.mhenro.R.drawable.icon)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setAutoCancel(true)
-                .build()
+            .setContentIntent(pendingIntent)
+            .setSmallIcon(com.mhenro.R.drawable.icon)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setAutoCancel(true)
+            .build()
     }
 }

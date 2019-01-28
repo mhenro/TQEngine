@@ -6,7 +6,7 @@ import com.mhenro.AdVideoEventListener
 import com.mhenro.GoogleServices
 import com.mhenro.MyGdxGame
 
-class DesktopLauncher: GoogleServices {
+class DesktopLauncher : GoogleServices {
     override fun isAdVideoLoaded(): Boolean {
         return true
     }

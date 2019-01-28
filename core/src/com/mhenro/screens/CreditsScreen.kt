@@ -27,7 +27,8 @@ class CreditsScreen(private val game: MyGdxGame) : AbstractGameScreen() {
         stage.addActor(createCloseButton())
 
         val container = VerticalGroup()
-        val labelName = Label("\n\n\n\n${MyGdxGame.questEngine.getQuestName()}\n\n\n\n", MyGdxGame.gameSkin, "default-white")
+        val labelName =
+            Label("\n\n\n\n${MyGdxGame.questEngine.getQuestName()}\n\n\n\n", MyGdxGame.gameSkin, "default-white")
         val labelCredits = Label("${MyGdxGame.i18NBundle.get("authors")}\n\n", MyGdxGame.gameSkin, "default-white")
         val labelAuthor1 = Label("${MyGdxGame.i18NBundle.get("author1")}\n", MyGdxGame.gameSkin, "default-white")
         val labelAuthor2 = Label("${MyGdxGame.i18NBundle.get("author2")}\n", MyGdxGame.gameSkin, "default-white")

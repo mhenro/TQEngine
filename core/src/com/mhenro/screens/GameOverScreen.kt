@@ -52,7 +52,8 @@ class GameOverScreen(private val game: MyGdxGame, private val endNode: QuestGame
 
     private fun createContentList(): Actor {
         val list = Table()
-        val text = Label(endNode.additionalParams.message!!.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin)
+        val text =
+            Label(endNode.additionalParams.message!!.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin)
         text.setWrap(true)
         text.setAlignment(Align.center)
         list.add(text).center().fill().expand().padLeft(15f).padRight(15f)

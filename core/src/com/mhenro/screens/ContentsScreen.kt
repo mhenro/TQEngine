@@ -69,7 +69,11 @@ class ContentsScreen(private val game: MyGdxGame) : AbstractGameScreen() {
 
     private fun createListElement(list: Table, chapter: QuestChapter, restart: Boolean = false) {
         list.row().padBottom(15f)
-        val btnBookmark = TextButton(if (restart) MyGdxGame.i18NBundle.get("restart") else chapter.name.locale[MyGdxGame.questEngine.getLanguage()], MyGdxGame.gameSkin, "no-border")
+        val btnBookmark = TextButton(
+            if (restart) MyGdxGame.i18NBundle.get("restart") else chapter.name.locale[MyGdxGame.questEngine.getLanguage()],
+            MyGdxGame.gameSkin,
+            "no-border"
+        )
         list.add(btnBookmark).left().padLeft(15f)
         list.add().expandX()
         list.add(Image(MyGdxGame.gameSkin, if (restart) "restart" else "bookmark")).center().padRight(15f)

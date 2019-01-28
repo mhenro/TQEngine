@@ -43,11 +43,12 @@ class AndroidLauncher : AndroidApplication(), GoogleServices, RewardedVideoAdLis
     private fun enableStrictMode() {
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(
-                    StrictMode.ThreadPolicy.Builder().detectAll()
-                            .penaltyLog().penaltyDeath().build())
+                StrictMode.ThreadPolicy.Builder().detectAll()
+                    .penaltyLog().penaltyDeath().build()
+            )
             StrictMode.setVmPolicy(
-                    StrictMode.VmPolicy.Builder().detectAll()
-                            .penaltyLog().penaltyDeath().build()
+                StrictMode.VmPolicy.Builder().detectAll()
+                    .penaltyLog().penaltyDeath().build()
             )
         }
     }

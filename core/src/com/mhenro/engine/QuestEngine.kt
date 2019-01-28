@@ -16,19 +16,21 @@ import com.mhenro.screens.GameOverScreen
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
-class QuestEngine private constructor(private val questData: QuestGame,
-                                      private val game: MyGdxGame,
-                                      private var savedCompletedTime: DateTime?,
-                                      private val history: MutableList<Int> = ArrayList(),
-                                      private var currentNode: QuestGameNode? = null,
-                                      private var currentInventory: MutableSet<Int> = HashSet(),
-                                      private var selectedLanguage: String = "en",
-                                      private val gameTimer: Timer = Timer(),
-                                      private var completedTime: DateTime = DateTime.now(),
-                                      private var contentList: ScrollPane = ScrollPane(null),
-                                      private var respawnNode: QuestGameNode? = null,
-                                      private var completedChapters: MutableSet<Int> = HashSet(),
-                                      private var selectedChoices: MutableMap<Int, Int> = HashMap()) {
+class QuestEngine private constructor(
+    private val questData: QuestGame,
+    private val game: MyGdxGame,
+    private var savedCompletedTime: DateTime?,
+    private val history: MutableList<Int> = ArrayList(),
+    private var currentNode: QuestGameNode? = null,
+    private var currentInventory: MutableSet<Int> = HashSet(),
+    private var selectedLanguage: String = "en",
+    private val gameTimer: Timer = Timer(),
+    private var completedTime: DateTime = DateTime.now(),
+    private var contentList: ScrollPane = ScrollPane(null),
+    private var respawnNode: QuestGameNode? = null,
+    private var completedChapters: MutableSet<Int> = HashSet(),
+    private var selectedChoices: MutableMap<Int, Int> = HashMap()
+) {
     companion object {
         const val DEBUG_MODE = false
         const val ENGINE_VERSION = 1
@@ -86,7 +88,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
         val wrongNode = questData.gameNodes.find { it.startNode && it.endNode }
         wrongNode?.let { throw QuestParserException("One of the nodes has Start and End markers") }
         questData.gameNodes.find { it.startNode }
-                ?: throw QuestParserException("Start node is not found")
+            ?: throw QuestParserException("Start node is not found")
         if (questData.gameNodes.filter { it.startNode }.count() > 1) {
             throw QuestParserException("Quest must has only one Start node")
         }
@@ -145,8 +147,10 @@ class QuestEngine private constructor(private val questData: QuestGame,
         val notification = node.additionalParams.notification
         val rewindIsAllowed = node.additionalParams.rewindIsAllowed
 
-        val button = TextButton("\n$msg\n",
-                MyGdxGame.gameSkin, if (info) "info-message-2" else "simple-message-2")
+        val button = TextButton(
+            "\n$msg\n",
+            MyGdxGame.gameSkin, if (info) "info-message-2" else "simple-message-2"
+        )
         button.label.setWrap(true)
         button.label.setAlignment(Align.left, Align.left)
         button.labelCell.padLeft(10f).padRight(10f)
@@ -195,7 +199,11 @@ class QuestEngine private constructor(private val questData: QuestGame,
         val choicePanel = Table()
         node.additionalParams.choices!!.forEach {
             val selected = selectedChoices[node.id] == it.nextNode && history
-            val btnChoice = TextButton("\n${it.text.locale[getLanguage()]}\n", MyGdxGame.gameSkin, if (selected) "choice-selected" else "choice")
+            val btnChoice = TextButton(
+                "\n${it.text.locale[getLanguage()]}\n",
+                MyGdxGame.gameSkin,
+                if (selected) "choice-selected" else "choice"
+            )
             btnChoice.label.setWrap(true)
             btnChoice.labelCell.padTop(5f).padBottom(5f)
             choicePanel.add(btnChoice).fill().expandX()
@@ -205,7 +213,8 @@ class QuestEngine private constructor(private val questData: QuestGame,
                 val missedInventory: MutableSet<Int> = HashSet()
                 missedInventory.addAll(it.dependsOn)
                 missedInventory.removeAll(getPlayerInventoryItemIds())
-                val missedInventoryStr = missedInventory.map { getInventoryById(it).name.locale[getLanguage()] }.joinToString(",")
+                val missedInventoryStr =
+                    missedInventory.map { getInventoryById(it).name.locale[getLanguage()] }.joinToString(",")
                 btnChoice.setText("${btnChoice.text}\n${MyGdxGame.i18NBundle.get("needinventory")}\n[$missedInventoryStr]")
             }
 
@@ -216,12 +225,16 @@ class QuestEngine private constructor(private val questData: QuestGame,
                             return
                         }
                         game.playClick()
-                        btnChoice.style = MyGdxGame.gameSkin.get("choice-selected", TextButton.TextButtonStyle::class.java)
+                        MyGdxGame.isTyping = true
+                        btnChoice.style =
+                                MyGdxGame.gameSkin.get("choice-selected", TextButton.TextButtonStyle::class.java)
                         selectedChoices[node.id] = it.nextNode
 
                         setCurrentNode(it.nextNode)
-                        completedTime = DateTime.now().plusMillis(node.additionalParams.duration
-                                ?: 100)
+                        completedTime = DateTime.now().plusMillis(
+                            node.additionalParams.duration
+                                ?: 100
+                        )
                     }
 
                     override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
@@ -262,6 +275,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
             0 -> {
                 val duration = node.additionalParams.duration!!
                 createMessage(node, history)
+                MyGdxGame.isTyping = true
 
                 if (!history) {
                     setCurrentNode(node.nextNode!!)
@@ -277,10 +291,12 @@ class QuestEngine private constructor(private val questData: QuestGame,
             }
             1 -> {
                 createAnswer(node, history)
+                MyGdxGame.isTyping = false
             }
             2 -> {
                 val location = node.additionalParams.location!!
                 val duration = node.additionalParams.duration!!
+                MyGdxGame.isTyping = false
 
                 createImage(location)
                 if (!history) {
@@ -493,7 +509,7 @@ class QuestEngine private constructor(private val questData: QuestGame,
         /* remove chapters after the current chapter */
         val newContents = HashSet<Int>()
         val currentChapter = questData.contents.findLast { it.startFromNode == nodeId }?.id
-                ?: Integer.MAX_VALUE
+            ?: Integer.MAX_VALUE
         completedChapters.forEach {
             if (currentChapter > it) {
                 newContents.add(it)

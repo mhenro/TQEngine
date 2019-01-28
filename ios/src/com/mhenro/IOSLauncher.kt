@@ -5,7 +5,7 @@ import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration
 import org.robovm.apple.foundation.NSAutoreleasePool
 import org.robovm.apple.uikit.UIApplication
 
-class IOSLauncher: IOSApplication.Delegate(), GoogleServices {
+class IOSLauncher : IOSApplication.Delegate(), GoogleServices {
     override fun createApplication(): IOSApplication {
         val config = IOSApplicationConfiguration()
         val game = MyGdxGame(this)

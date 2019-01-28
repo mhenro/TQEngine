@@ -5,13 +5,16 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.mhenro.MyGdxGame
 
-class GameScreen(private val game: MyGdxGame,
-                 private var doNotBack: Boolean = false) : AbstractGameScreen() {
+class GameScreen(
+    private val game: MyGdxGame,
+    private var doNotBack: Boolean = false
+) : AbstractGameScreen() {
     private val tag = GameScreen::class.java.simpleName
     private lateinit var contentList: ScrollPane
 
@@ -29,6 +32,8 @@ class GameScreen(private val game: MyGdxGame,
         wrapper.add(createMainMenuButton()).right().padRight(25f)
         wrapper.row().padBottom(5f).padTop(5f)
         wrapper.add(createContentList()).fill().expand().colspan(4)
+        wrapper.row().padBottom(15f).padTop(15f)
+        wrapper.add(createTypingImage()).fill().expand()//.colspan(4)
         wrapper.layout()
     }
 
@@ -107,6 +112,12 @@ class GameScreen(private val game: MyGdxGame,
         contentList = ScrollPane(table)
         contentList.setScrollingDisabled(true, false)
         return contentList
+    }
+
+    private fun createTypingImage(): Actor {
+        val typingImg = Image()
+        typingImg.draw(MyGdxGame.spriteAnimation, 100f)
+        return typingImg
     }
 
     override fun render(delta: Float) {

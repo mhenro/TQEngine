@@ -33,7 +33,11 @@ class MainMenuScreen(private val game: MyGdxGame) : AbstractGameScreen() {
     }
 
     private fun createStartButton(): Actor {
-        val btnStartGame = ImageTextButton(if (MyGdxGame.questEngine.isHistoryAvailable()) MyGdxGame.i18NBundle.get("resumegame") else MyGdxGame.i18NBundle.get("newgame"), MyGdxGame.gameSkin)
+        val btnStartGame = ImageTextButton(
+            if (MyGdxGame.questEngine.isHistoryAvailable()) MyGdxGame.i18NBundle.get("resumegame") else MyGdxGame.i18NBundle.get(
+                "newgame"
+            ), MyGdxGame.gameSkin
+        )
         btnStartGame.addListener(object : InputListener() {
             override fun touchUp(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int) {
                 game.playClick()

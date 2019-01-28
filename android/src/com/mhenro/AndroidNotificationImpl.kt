@@ -26,8 +26,18 @@ class AndroidNotificationImpl(private val gameActivity: Activity) : Notification
         intent.putExtra("title", title)
         intent.putExtra("text", text)
         intent.putExtra("dateTime", dateTime)
-        val alarmIntent = PendingIntent.getBroadcast(context, AndroidLauncher.ALARM_TYPE_ELAPSE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        getAlarmManager().setInexactRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), AlarmManager.INTERVAL_HOUR, alarmIntent)
+        val alarmIntent = PendingIntent.getBroadcast(
+            context,
+            AndroidLauncher.ALARM_TYPE_ELAPSE,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        getAlarmManager().setInexactRepeating(
+            AlarmManager.ELAPSED_REALTIME,
+            SystemClock.elapsedRealtime(),
+            AlarmManager.INTERVAL_HOUR,
+            alarmIntent
+        )
     }
 
     private fun getAlarmManager(): AlarmManager {

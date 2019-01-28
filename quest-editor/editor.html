@@ -4,7 +4,7 @@
     <title>Quest editor</title>
 
     <script type="text/javascript" src="vis.js"></script>
-    <link href="vis-network.min.css" rel="stylesheet" type="text/css" />
+    <link href="vis-network.min.css" rel="stylesheet" type="text/css"/>
 
     <style type="text/css">
     #mynetwork {
@@ -37,14 +37,15 @@
     #generateview {
         text-align: center
     }
-  </style>
+
+    </style>
 
 </head>
 
 <body>
 <div id="mynetwork"></div>
 <div>
-    <textarea  name="questData" rows="50" id="questData" class="searchField"></textarea>
+    <textarea name="questData" rows="50" id="questData" class="searchField"></textarea>
 </div>
 <div id="generateview">
     <button onclick="generateView()">Generate view</button>
@@ -175,6 +176,7 @@ const generateView = () => {
       };
       var network = new vis.Network(container, data, options);
   }
+
 </script>
 
 </body>
