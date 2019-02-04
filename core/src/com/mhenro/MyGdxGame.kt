@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.ui.Skin
 import com.badlogic.gdx.utils.I18NBundle
 import com.mhenro.engine.QuestEngine
@@ -42,11 +43,6 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
         lateinit var menuMusic: Music
         lateinit var gamePrefs: Preferences
         lateinit var i18NBundle: I18NBundle
-
-        lateinit var typingSheet: Texture
-        lateinit var typeAnimation: Animation<TextureRegion>
-        lateinit var spriteAnimation: SpriteBatch
-        var stateTime: Float = 0f
         var isTyping: Boolean = false
     }
 
@@ -75,15 +71,6 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
         ringEnd = Gdx.audio.newSound(Gdx.files.internal("sounds/ring-end.mp3"))
         loadLanguage()
         initI18NBundle()
-
-        typingSheet = Texture(Gdx.files.internal("typing_animation.png"))
-        val tmp = TextureRegion.split(typingSheet, 310, 310)
-        val typingFrames = com.badlogic.gdx.utils.Array<TextureRegion>(29)
-        for (index in 0..28) {
-            typingFrames.add(tmp[0][index])
-        }
-        typeAnimation = Animation(0.05f, typingFrames)
-        spriteAnimation = SpriteBatch()
 
         /* load previously saved data */
         if (gamePrefs.getString("history").isNotEmpty()) {
@@ -232,19 +219,6 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
                 break // first toast still active, break the loop
             }
         }
-
-        /* rendering typing animation */
-        if (isTyping && screen is GameScreen) {
-            stateTime += Gdx.graphics.deltaTime
-            val currentFrame = typeAnimation.getKeyFrame(stateTime, true)
-            spriteAnimation.begin()
-            spriteAnimation.draw(
-                currentFrame,
-                (Gdx.graphics.width / 2 - currentFrame.regionWidth / 2).toFloat(), /*(Gdx.graphics.height).toFloat()*/
-                -135f
-            )
-            spriteAnimation.end()
-        }
     }
 
     override fun pause() {
@@ -266,8 +240,5 @@ class MyGdxGame(val googleServices: GoogleServices) : Game(), AdVideoEventListen
     override fun dispose() {
         music.dispose()
         menuMusic.dispose()
-
-        spriteAnimation.dispose()
-        typingSheet.dispose()
     }
 }

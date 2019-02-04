@@ -9215,6 +9215,91 @@ jsonData: {
 				}
 				deletable: true
 			}
+			{
+				class: com.ray3k.skincomposer.data.StyleData
+				name: typing
+				clazz: com.badlogic.gdx.scenes.scene2d.ui.TextField
+				properties: {
+					font: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.g2d.BitmapFont
+						name: font
+						optional: false
+						value: new-general-font-20
+					}
+					fontColor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.Color
+						name: fontColor
+						optional: false
+						value: font-disabled-alt
+					}
+					focusedFontColor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.Color
+						name: focusedFontColor
+						optional: true
+						value: null
+					}
+					disabledFontColor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.Color
+						name: disabledFontColor
+						optional: true
+						value: null
+					}
+					background: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: background
+						optional: true
+						value: null
+					}
+					focusedBackground: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: focusedBackground
+						optional: true
+						value: null
+					}
+					disabledBackground: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: disabledBackground
+						optional: true
+						value: null
+					}
+					cursor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: cursor
+						optional: true
+						value: null
+					}
+					selection: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
+						name: selection
+						optional: true
+						value: null
+					}
+					messageFont: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.g2d.BitmapFont
+						name: messageFont
+						optional: true
+						value: null
+					}
+					messageFontColor: {
+						class: com.ray3k.skincomposer.data.StyleProperty
+						type: com.badlogic.gdx.graphics.Color
+						name: messageFontColor
+						optional: true
+						value: null
+					}
+				}
+				deletable: true
+			}
 		]
 		com.badlogic.gdx.scenes.scene2d.ui.TextTooltip: [
 			{

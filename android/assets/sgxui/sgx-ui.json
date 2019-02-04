@@ -671,6 +671,10 @@ com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 		cursor: black
 		selection: text-field-selection
 	}
+	typing: {
+		font: new-general-font-20
+		fontColor: font-disabled-alt
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 	default: {

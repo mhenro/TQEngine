@@ -5,10 +5,11 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
-import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane
 import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.TextField
 import com.mhenro.MyGdxGame
 
 class GameScreen(
@@ -17,6 +18,7 @@ class GameScreen(
 ) : AbstractGameScreen() {
     private val tag = GameScreen::class.java.simpleName
     private lateinit var contentList: ScrollPane
+    private var typingImage = createTypingImage()
 
     init {
         createLayout()
@@ -32,8 +34,10 @@ class GameScreen(
         wrapper.add(createMainMenuButton()).right().padRight(25f)
         wrapper.row().padBottom(5f).padTop(5f)
         wrapper.add(createContentList()).fill().expand().colspan(4)
+        wrapper.row()
+        wrapper.add().fill().expand()
         wrapper.row().padBottom(15f).padTop(15f)
-        wrapper.add(createTypingImage()).fill().expand()//.colspan(4)
+        wrapper.add(typingImage).fill().padLeft(20f)
         wrapper.layout()
     }
 
@@ -115,8 +119,16 @@ class GameScreen(
     }
 
     private fun createTypingImage(): Actor {
-        val typingImg = Image()
-        typingImg.draw(MyGdxGame.spriteAnimation, 100f)
+        val typingText = MyGdxGame.i18NBundle.get("typing")
+        val typingImg = TextField(typingText, MyGdxGame.gameSkin, "typing")
+        typingImg.addAction(
+            Actions.forever(
+                Actions.sequence(
+                    Actions.fadeOut(1f),
+                    Actions.fadeIn(1f)
+                )
+            )
+        )
         return typingImg
     }
 
@@ -132,5 +144,7 @@ class GameScreen(
                 doNotBack = false
             }
         }
+
+        typingImage.isVisible = MyGdxGame.isTyping
     }
 }

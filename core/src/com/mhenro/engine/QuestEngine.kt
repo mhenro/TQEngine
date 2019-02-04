@@ -274,8 +274,13 @@ class QuestEngine private constructor(
         when (node.type) {
             0 -> {
                 val duration = node.additionalParams.duration!!
+                val isRewindAllowed = node.additionalParams.rewindIsAllowed
                 createMessage(node, history)
-                MyGdxGame.isTyping = true
+                if (isRewindAllowed != null) {
+                    MyGdxGame.isTyping = !isRewindAllowed
+                } else {
+                    MyGdxGame.isTyping = true
+                }
 
                 if (!history) {
                     setCurrentNode(node.nextNode!!)
